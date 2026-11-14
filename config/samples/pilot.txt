@@ -1,0 +1,1 @@
+# Pilot sample. One domain per line, or "rank,domain". Blank lines and # lines are ignored.

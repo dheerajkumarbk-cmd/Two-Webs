@@ -1,0 +1,44 @@
+{
+  "_note": "User-Agent strings are from memory of vendor docs. Replace them with the headers captured in the calibration step before the full crawl. All identities send the same common headers so that only the User-Agent differs.",
+  "db_path": "data/twowebs.sqlite",
+  "common_headers": {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9"
+  },
+  "identities": [
+    {"name": "browser", "kind": "browser", "robots_token": "*", "reps": 2,
+     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"},
+    {"name": "OAI-SearchBot", "kind": "search", "robots_token": "OAI-SearchBot", "reps": 2,
+     "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; OAI-SearchBot/1.0; +https://openai.com/searchbot)"},
+    {"name": "ClaudeBot", "kind": "search", "robots_token": "ClaudeBot", "reps": 2,
+     "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ClaudeBot/1.0; +claudebot@anthropic.com)"},
+    {"name": "PerplexityBot", "kind": "search", "robots_token": "PerplexityBot", "reps": 2,
+     "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)"},
+    {"name": "ChatGPT-User", "kind": "user", "robots_token": "ChatGPT-User", "reps": 2,
+     "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; ChatGPT-User/1.0; +https://openai.com/bot)"},
+    {"name": "Claude-User", "kind": "user", "robots_token": "Claude-User", "reps": 2,
+     "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Claude-User/1.0; +Claude-User@anthropic.com)"},
+    {"name": "Perplexity-User", "kind": "user", "robots_token": "Perplexity-User", "reps": 2,
+     "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Perplexity-User/1.0; +https://perplexity.ai/perplexity-user)"},
+    {"name": "GPTBot", "kind": "training", "robots_token": "GPTBot", "reps": 2,
+     "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.2; +https://openai.com/gptbot)"}
+  ],
+  "crawl": {
+    "concurrency": 30,
+    "delay_s": 0.5,
+    "timeout_s": 20,
+    "max_body_bytes": 1500000,
+    "respect_robots": true,
+    "inner_page": true
+  },
+  "analysis": {
+    "min_page_words": 50,
+    "min_sentence_words": 6,
+    "min_sentences_for_more_or_less": 3,
+    "snippet_chars": 3000
+  },
+  "labels": {
+    "all": ["blocked_or_challenged", "cosmetic", "ai_sees_less", "ai_sees_more", "different_url", "facts_differ", "sponsored_ai_only", "addressed_to_ai"],
+    "headline": ["facts_differ", "sponsored_ai_only", "addressed_to_ai"]
+  }
+}

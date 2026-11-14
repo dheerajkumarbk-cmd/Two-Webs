@@ -1,0 +1,11 @@
+# Smoke test: time.com is the positive control, the rest are ordinary large sites.
+time.com
+wikipedia.org
+bbc.com
+python.org
+theguardian.com
+apnews.com
+mozilla.org
+github.com
+nature.com
+example.com
