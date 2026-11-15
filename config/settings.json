@@ -23,6 +23,18 @@
     {"name": "GPTBot", "kind": "training", "robots_token": "GPTBot", "reps": 2,
      "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.2; +https://openai.com/gptbot)"}
   ],
+  "_trigger_note": "Trigger crawl (crawl --set trigger): browser, then these in order. browser-control sends exactly the browser's headers and measures the method's false-positive floor. The -md identities add only an Accept header asking for Markdown.",
+  "trigger_identities": [
+    {"name": "browser-control", "kind": "control", "robots_token": "*", "reps": 2,
+     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"},
+    {"name": "browser-md", "kind": "accept", "robots_token": "*", "reps": 2,
+     "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+     "extra_headers": {"Accept": "text/markdown, text/html;q=0.9, */*;q=0.8"}},
+    {"name": "Claude-User", "same_as": "Claude-User"},
+    {"name": "Claude-User-md", "kind": "both", "robots_token": "Claude-User", "reps": 2,
+     "user_agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Claude-User/1.0; +Claude-User@anthropic.com)",
+     "extra_headers": {"Accept": "text/markdown, text/html;q=0.9, */*;q=0.8"}}
+  ],
   "crawl": {
     "concurrency": 30,
     "delay_s": 0.5,

@@ -22,9 +22,12 @@ ERROR_CAP = 300
 
 
 def headers_for(identity, cfg):
-    """Common headers plus the identity's User-Agent. Nothing else varies."""
+    """Common headers plus the identity's User-Agent. Nothing else varies,
+    unless an identity declares `extra_headers` (used for identities that test
+    a different trigger, such as the Accept header)."""
     h = dict(cfg.get("common_headers", {}))
     h["User-Agent"] = identity["user_agent"]
+    h.update(identity.get("extra_headers") or {})
     return h
 
 

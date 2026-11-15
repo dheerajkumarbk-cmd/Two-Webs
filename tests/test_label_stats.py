@@ -45,7 +45,9 @@ class DbTestCase(unittest.TestCase):
              ai_text="", br_text="", facts=(), n_ai=0, n_br=0):
         flagged = 1 if (comparable and auto_label in CFG["labels"]["headline"]) else 0
         self.db.execute(
-            "INSERT INTO comparisons VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO comparisons(page_id, identity, comparable, reason, noise_sim,"
+            " cross_sim, n_ai_only, n_browser_only, ai_only_text, browser_only_text,"
+            " ai_only_facts, auto_label, flagged) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (page_id, identity, comparable, reason, noise if comparable else None,
              1.0 if comparable else None, n_ai, n_br, ai_text, br_text,
              json.dumps(list(facts)), auto_label if (comparable or auto_label) else None, flagged))

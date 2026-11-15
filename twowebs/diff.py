@@ -85,6 +85,7 @@ def analyse_fetch(f, cfg):
     lines, _links, _is_html = extract.text_lines(f.get("body") or b"",
                                                  f.get("content_type"))
     f["lines"] = lines
+    f["is_html"] = bool(_is_html)
     f["n_words"] = _count_words(lines)
     head = "\n".join(lines)[:3000]
     if f["n_words"] < CHALLENGE_MAX_WORDS and CHALLENGE_RE.search(head):
@@ -125,7 +126,8 @@ def _not_comparable(reason, auto_label=None):
         "comparable": 0, "reason": reason, "noise_sim": None, "cross_sim": None,
         "n_ai_only": None, "n_browser_only": None, "ai_only_text": "",
         "browser_only_text": "", "ai_only_facts": [], "auto_label": auto_label,
-        "flagged": 0,
+        "flagged": 0, "ai_markdown": None, "n_facts_browser": None,
+        "n_facts_lost": None, "n_facts_added": None, "facts_lost": [], "facts_added": [],
     }
 
 
@@ -190,6 +192,7 @@ def compare(browser_fetches, ai_fetches, cfg):
     br_core = set.intersection(*[p["set"] for p in b_prep])
     cross_sim = _jaccard(ai_core, br_core)
 
+    fa = _fact_account(b_prep, a_prep)
     snippet = an["snippet_chars"]
     ai_text = "\n".join(ai_only)
     br_text = "\n".join(br_only)
@@ -240,7 +243,23 @@ def compare(browser_fetches, ai_fetches, cfg):
         "ai_only_facts": ai_facts,
         "auto_label": label,
         "flagged": 1 if label in cfg["labels"]["headline"] else 0,
+        "ai_markdown": 1 if all(f.get("is_html") is False for f in ai_fetches) else 0,
+        "n_facts_browser": len(fa["stable_b"]),
+        "n_facts_lost": len(fa["lost"]), "n_facts_added": len(fa["added"]),
+        "facts_lost": sorted(fa["lost"])[:40], "facts_added": sorted(fa["added"])[:40],
     }
+
+
+def _fact_account(b_prep, a_prep):
+    """Hard facts (prices, percents, dates, numbers) in both directions.
+    lost: stated in every browser fetch and in no AI fetch.
+    added: stated in every AI fetch and in no browser fetch."""
+    hard = tuple(t + ":" for t in extract.HARD_TYPES)
+    b = [set(x for x in _facts(p["text"]) if x.startswith(hard)) for p in b_prep]
+    a = [set(x for x in _facts(p["text"]) if x.startswith(hard)) for p in a_prep]
+    stable_b, stable_a = set.intersection(*b), set.intersection(*a)
+    return {"stable_b": stable_b, "lost": stable_b - set.union(*a),
+            "added": stable_a - set.union(*b)}
 
 
 def _by_rep(fetches):
@@ -276,12 +295,17 @@ def analyse_all(db, cfg):
             db.execute(
                 "INSERT OR REPLACE INTO comparisons(page_id, identity, comparable,"
                 " reason, noise_sim, cross_sim, n_ai_only, n_browser_only,"
-                " ai_only_text, browser_only_text, ai_only_facts, auto_label, flagged)"
-                " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                " ai_only_text, browser_only_text, ai_only_facts, auto_label, flagged,"
+                " ai_markdown, n_facts_browser, n_facts_lost, n_facts_added,"
+                " facts_lost, facts_added)"
+                " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (page_id, name, r["comparable"], r["reason"], r["noise_sim"],
                  r["cross_sim"], r["n_ai_only"], r["n_browser_only"],
                  r["ai_only_text"], r["browser_only_text"],
-                 json.dumps(r["ai_only_facts"]), r["auto_label"], r["flagged"]))
+                 json.dumps(r["ai_only_facts"]), r["auto_label"], r["flagged"],
+                 r["ai_markdown"], r["n_facts_browser"], r["n_facts_lost"],
+                 r["n_facts_added"], json.dumps(r["facts_lost"]),
+                 json.dumps(r["facts_added"])))
             n_cmp += 1
         if i % 200 == 0:
             db.commit()

@@ -159,3 +159,78 @@ def print_summary(db, cfg):
         print("Inter-labeller agreement (%s vs %s): %d cases, agreement %s, Cohen's kappa %s"
               % (k["labellers"][0], k["labellers"][1], k["n"], _pct(k["agreement"]), kv))
     return res
+
+
+def triggers(db, cfg, sample, min_facts=3):
+    """Per identity within one sample, at site level: how many sites answer with
+    a different page, how many with a Markdown twin, and what the twin does to
+    the page's hard facts. `browser-control` sends the browser's own headers,
+    so its row is the method's false-positive floor."""
+    rows = db.execute(
+        "SELECT p.site_id, c.* FROM comparisons c JOIN pages p ON p.page_id=c.page_id"
+        " JOIN sites s ON s.site_id=p.site_id WHERE s.sample=? AND c.comparable=1",
+        (sample,)).fetchall()
+    out = {}
+    for r in rows:
+        d = out.setdefault(r["identity"], {
+            "_sites": set(), "_differs": set(), "_flagged": set(), "_md": set(),
+            "_twin": {}, "labels": {}})
+        site = r["site_id"]
+        d["_sites"].add(site)
+        d["labels"][r["auto_label"]] = d["labels"].get(r["auto_label"], 0) + 1
+        if r["auto_label"] != "same":
+            d["_differs"].add(site)
+        if r["flagged"]:
+            d["_flagged"].add(site)
+        if r["ai_markdown"]:
+            d["_md"].add(site)
+            nb = r["n_facts_browser"] or 0
+            if nb >= min_facts:
+                # one twin page per site: the one with the most facts
+                best = d["_twin"].get(site)
+                if best is None or nb > best[0]:
+                    d["_twin"][site] = (nb, r["n_facts_lost"] or 0, r["n_facts_added"] or 0)
+    res = {}
+    for ident, d in out.items():
+        n = len(d["_sites"])
+        tw = list(d["_twin"].values())
+        total = sum(t[0] for t in tw)
+        res[ident] = {
+            "sites_comparable": n,
+            "sites_differ": _rate(len(d["_differs"]), n),
+            "sites_flagged": _rate(len(d["_flagged"]), n),
+            "sites_markdown": _rate(len(d["_md"]), n),
+            "twins_with_facts": len(tw),
+            "twins_losing_quarter": _rate(sum(1 for t in tw if t[1] >= 0.25 * t[0]), len(tw)),
+            "twins_losing_half": _rate(sum(1 for t in tw if t[1] >= 0.5 * t[0]), len(tw)),
+            "twins_adding_facts": _rate(sum(1 for t in tw if t[2] > 0), len(tw)),
+            "facts_lost_pooled": _rate(sum(t[1] for t in tw), total),
+            "page_labels": d["labels"],
+        }
+    return res
+
+
+def print_triggers(db, cfg, sample):
+    res = triggers(db, cfg, sample)
+
+    def f(x):
+        if x["rate"] is None:
+            return "%d/%d" % (x["k"], x["n"])
+        return "%d/%d = %.1f%% (%.1f-%.1f)" % (x["k"], x["n"], 100 * x["rate"],
+                                               100 * x["low"], 100 * x["high"])
+    print("Trigger summary, sample %r (unit: sites; 95%% Wilson intervals)" % sample)
+    for ident in sorted(res):
+        r = res[ident]
+        print("\n%s  (comparable sites: %d)" % (ident, r["sites_comparable"]))
+        print("  serve a different page:     %s" % f(r["sites_differ"]))
+        print("  flagged (headline labels):  %s" % f(r["sites_flagged"]))
+        print("  serve a Markdown twin:      %s" % f(r["sites_markdown"]))
+        if r["twins_with_facts"]:
+            print("  twins with enough facts:    %d" % r["twins_with_facts"])
+            print("    lose >= 25%% of facts:     %s" % f(r["twins_losing_quarter"]))
+            print("    lose >= 50%% of facts:     %s" % f(r["twins_losing_half"]))
+            print("    add facts not in HTML:    %s" % f(r["twins_adding_facts"]))
+            print("    facts missing, pooled:    %s" % f(r["facts_lost_pooled"]))
+        print("  page labels: %s" % ", ".join(
+            "%s %d" % kv for kv in sorted(r["page_labels"].items(), key=lambda kv: -kv[1])))
+    return res

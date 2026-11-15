@@ -51,7 +51,13 @@ def connect(path):
     cols = [r[1] for r in db.execute("PRAGMA table_info(fetches)").fetchall()]
     if "body_sha" not in cols:
         db.execute("ALTER TABLE fetches ADD COLUMN body_sha TEXT")
-        db.commit()
+    cols = [r[1] for r in db.execute("PRAGMA table_info(comparisons)").fetchall()]
+    for name, kind in (("ai_markdown", "INTEGER"), ("n_facts_browser", "INTEGER"),
+                       ("n_facts_lost", "INTEGER"), ("n_facts_added", "INTEGER"),
+                       ("facts_lost", "TEXT"), ("facts_added", "TEXT")):
+        if name not in cols:
+            db.execute("ALTER TABLE comparisons ADD COLUMN %s %s" % (name, kind))
+    db.commit()
     return db
 
 

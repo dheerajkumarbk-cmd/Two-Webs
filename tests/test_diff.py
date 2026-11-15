@@ -193,9 +193,30 @@ class CompareNotComparableTests(unittest.TestCase):
 
     def test_result_has_every_key(self):
         keys = {"comparable", "reason", "noise_sim", "cross_sim", "n_ai_only", "n_browser_only",
-                "ai_only_text", "browser_only_text", "ai_only_facts", "auto_label", "flagged"}
+                "ai_only_text", "browser_only_text", "ai_only_facts", "auto_label", "flagged",
+                "ai_markdown", "n_facts_browser", "n_facts_lost", "n_facts_added",
+                "facts_lost", "facts_added"}
         self.assertEqual(set(diff.compare(self.ok(n=1), self.ok("ClaudeBot"), CFG)), keys)
         self.assertEqual(set(run([html_page(BASE)] * 2, [html_page(BASE)] * 2)), keys)
+
+    def test_fact_accounting_counts_lost_and_added_facts(self):
+        # Markdown twin drops the "$49.99" sentence and adds a "98%" claim.
+        kept = [p for p in BASE if "$49.99" not in p]
+        md = md_page(kept, "\nCustomers report 98% satisfaction with every widget we ship.\n")
+        r = run([html_page(BASE)] * 2, [md] * 2, "text/markdown")
+        self.assertEqual(r["ai_markdown"], 1)
+        self.assertIn("price:$49.99", r["facts_lost"])
+        self.assertIn("percent:98%", r["facts_added"])
+        self.assertEqual(r["n_facts_lost"], len(r["facts_lost"]))
+        self.assertGreaterEqual(r["n_facts_browser"], r["n_facts_lost"])
+        # identical HTML on both sides: nothing lost, nothing added, not Markdown
+        same = run([html_page(BASE)] * 2, [html_page(BASE)] * 2)
+        self.assertEqual((same["ai_markdown"], same["n_facts_lost"], same["n_facts_added"]), (0, 0, 0))
+
+    def test_fact_only_in_one_ai_fetch_is_not_added(self):
+        md1 = md_page(BASE, "\nCustomers report 98% satisfaction with every widget we ship.\n")
+        r = run([html_page(BASE)] * 2, [md1, md_page(BASE)], "text/markdown")
+        self.assertNotIn("percent:98%", r["facts_added"])
 
 
 class CompareTests(unittest.TestCase):

@@ -22,4 +22,25 @@ def browser(cfg):
 
 
 def ai_identities(cfg):
-    return cfg["identities"][1:]
+    """Every non-browser identity that can appear in the database: the
+    User-Agent identities plus the trigger-test identities."""
+    out = list(cfg["identities"][1:])
+    seen = set(i["name"] for i in cfg["identities"])
+    for i in cfg.get("trigger_identities", []):
+        if i["name"] not in seen:
+            seen.add(i["name"])
+            out.append(i)
+    return out
+
+
+def trigger_set(cfg):
+    """Identities for the trigger crawl: browser, an identical control, and the
+    2x2 of User-Agent (browser / AI) by Accept header (HTML / Markdown)."""
+    by_name = dict((i["name"], i) for i in cfg["identities"])
+    out = [browser(cfg)]
+    for i in cfg.get("trigger_identities", []):
+        if i.get("same_as"):
+            out.append(by_name[i["same_as"]])
+        else:
+            out.append(i)
+    return out

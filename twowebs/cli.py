@@ -88,7 +88,17 @@ def cmd_load_sample(args, cfg):
 def cmd_crawl(args, cfg):
     from . import fetch
     db = _db(cfg)
+    if getattr(args, "set", None) == "trigger":
+        from . import config as C
+        cfg = dict(cfg, identities=C.trigger_set(cfg))
     asyncio.run(fetch.crawl(db, cfg, sample=args.sample, limit=args.limit))
+    return 0
+
+
+def cmd_triggers(args, cfg):
+    from . import stats
+    db = _db(cfg)
+    stats.print_triggers(db, cfg, args.sample)
     return 0
 
 
@@ -187,7 +197,15 @@ def build_parser():
     s = sub.add_parser("crawl", help="fetch pending sites")
     s.add_argument("--sample")
     s.add_argument("--limit", type=int)
+    s.add_argument("--set", choices=["default", "trigger"], default="default",
+                   help="identity set: default (User-Agent identities) or trigger "
+                        "(browser, control, and the User-Agent x Accept 2x2)")
     s.set_defaults(func=cmd_crawl)
+
+    s = sub.add_parser("triggers", help="summarise the trigger crawl: Markdown twins, "
+                                        "fact loss and gain, control floor")
+    s.add_argument("--sample", required=True)
+    s.set_defaults(func=cmd_triggers)
 
     s = sub.add_parser("compact", help="convert old page storage to the smaller shared format")
     s.set_defaults(func=cmd_compact)
