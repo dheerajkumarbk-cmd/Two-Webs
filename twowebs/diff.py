@@ -243,7 +243,11 @@ def compare(browser_fetches, ai_fetches, cfg):
         "ai_only_facts": ai_facts,
         "auto_label": label,
         "flagged": 1 if label in cfg["labels"]["headline"] else 0,
-        "ai_markdown": 1 if all(f.get("is_html") is False for f in ai_fetches) else 0,
+        # A twin: the browser gets HTML and this identity gets a non-HTML
+        # (Markdown or plain text) version of the same address. Pages that are
+        # non-HTML for everyone (JSON or text endpoints) do not count.
+        "ai_markdown": 1 if (all(f.get("is_html") is False for f in ai_fetches)
+                             and all(f.get("is_html") for f in browser_fetches)) else 0,
         "n_facts_browser": len(fa["stable_b"]),
         "n_facts_lost": len(fa["lost"]), "n_facts_added": len(fa["added"]),
         "facts_lost": sorted(fa["lost"])[:40], "facts_added": sorted(fa["added"])[:40],
