@@ -20,10 +20,8 @@
 \begin{center}
 {\LARGE\bfseries Two Webs: A Single Request Header Reveals\\[2pt] a Second Web for AI Agents\par}
 \vspace{8pt}
-\begin{tabular}{c@{\hspace{3em}}c}
-\textbf{[Author 1 name]} & \textbf{[Author 2 name]}\\{}
-[Affiliation] & [Affiliation]
-\end{tabular}\\[5pt]
+\textbf{Dheeraj Kumar B K}\\
+Independent, Bengaluru\\[5pt]
 With \textbf{Apart Research}
 \end{center}
 
@@ -41,6 +39,13 @@ A few twins carry text written for the machine, including a sponsored block on a
 All counts are automatic and unlabelled.
 We release the crawler, the analysis, an interactive dataset explorer and a single-URL checker; everything runs on a laptop CPU with no model in the loop.
 \end{abstract}
+
+\begin{center}\fcolorbox{black!25}{black!4}{\parbox{0.94\linewidth}{\small
+\textbf{The paper in four lines.}
+(1)~Ask a website for its page the way a browser does, then ask again adding one header that requests Markdown.
+(2)~About one top site in twenty answers the second request with a different document; pretending to be an AI crawler almost never does.
+(3)~Half of those documents keep every number on the page; about one in six drops most of them, prices first.
+(4)~Anyone checking what an AI agent read should fetch the page the way the agent did, and compare the facts.}}\end{center}
 
 \section{Introduction}
 When an AI assistant answers with a citation, the reader's practical check is to open the link. That check assumes one page per address. In mid-2026 a major news publisher was reported to serve AI crawlers a Markdown version of its pages containing sponsored answers that human readers do not see~[1]. Separately, content negotiation for agents has become an ordinary web feature: a client that sends \hdr{Accept: text/markdown} may receive a Markdown rendition of a page instead of HTML~[2].
@@ -117,18 +122,21 @@ Both headers & \BothSites & \BothDifferK{} (\BothDifferP) & \BothFlagK{} (\BothF
 \section{Discussion and Limitations}
 The second web is being built mostly in the open, through content negotiation, by sites that want agents to read them. Half of these renditions are faithful. The safety-relevant part is the tail: on about one twin in six, an agent is given a page missing most of the numbers a person would see, prices above all, and occasionally a sentence a person would not see. Oversight that re-fetches an agent's sources, evaluations that replay browsing, and citation-faithfulness benchmarks all assume the reviewer can obtain what the agent read. One request header is enough to break that assumption on roughly one top site in twenty. The practical recommendation is narrow: record or reproduce the agent's request headers when verifying, and compare facts, not similarity.
 
-\textbf{Limitations.}
-\begin{itemize}
-\item \textbf{No human labels.} Every label is automatic. Only the control bounds its error.
-\item \textbf{Exposure is not established.} We did not measure which deployed assistants send the Markdown Accept header. If few do, practical exposure is smaller than the site-level rate; if adoption grows, it approaches it.
-\item \textbf{Raw HTML baseline.} A fact counted as lost is lost relative to raw HTML; content people see only after JavaScript runs is not captured on either side.
-\item \textbf{One snapshot.} One day, one network location (India), a homepage and one inner page. Country redirects affect some comparisons.
-\item \textbf{Lower bound for User-Agent.} Sites that verify AI fetchers by IP address showed us the human page.
-\item \textbf{Regular-expression facts} miss facts stated in words and cannot tell whether an omitted number mattered.
-\item \textbf{Sample.} The top of a popularity list, weighted toward technology companies.
-\end{itemize}
+\textbf{What the design gets right.} Three choices make the result trustworthy at this scale: a factorial design that isolates each request signal; a control run inside the same crawl, so the noise floor is measured and not assumed; and facts counted mechanically, so no model's judgement sits between the data and the numbers. The whole pipeline reruns on a laptop CPU from one command per stage, and every number in this report is generated from the database.
 
-\textbf{Future Work.} Two-person labelling of all flagged cases with reported agreement (the tooling exists; time did not); an end-to-end test asking deployed assistants about confirmed pages; calibration of the exact headers each assistant sends; a JavaScript-rendered human baseline; repeat crawls to track adoption; more pages per site and several countries; requests from verified fetcher IP ranges; a per-site risk score combining trigger breadth, fact loss and machine-only claims; and a public tracker.
+\textbf{Limitations, and what would resolve each.} Each limit below is a bounded piece of follow-up work, and the tooling for most of it already exists.
+
+{\small\begin{tabular}{@{}p{0.29\linewidth}p{0.67\linewidth}@{}}\toprule
+\textbf{Limit of this study} & \textbf{What resolves it}\\\midrule
+Labels are automatic; only the control bounds their error & Two-person labelling with reported agreement. The export, import and agreement commands are built and tested; the weekend did not allow the labelling itself.\\
+Exposure is not established: we did not measure which deployed assistants send the Markdown Accept header & Log the headers real assistants send to a page we control, then weight the site-level rate by assistant. If adoption of the header grows, exposure approaches the rate reported here.\\
+Raw-HTML baseline: content people see only after JavaScript runs is not captured & Add a rendered-browser identity as a sixth arm of the same design.\\
+One day, one location (India), two pages per site & Repeat crawls from several countries; the crawler is resumable and the storage deduplicated for this.\\
+User-Agent results are a lower bound, since IP-verifying sites show us the human page & Requests from verified fetcher address ranges, which needs an assistant provider's cooperation.\\
+Regular expressions miss facts stated in words and cannot judge whether an omitted number mattered & A labelled sample of omissions graded for importance.\\\bottomrule
+\end{tabular}}
+
+\textbf{Future Work.} Beyond closing the limits above: an end-to-end test asking deployed assistants about the confirmed pages and recording whether sponsorship and omitted facts surface in their answers; a per-site risk score combining trigger breadth, fact loss and machine-only claims; a public tracker of sites whose twin diverges; and a verifier library that fetches a cited page as the agent did. With guidance from researchers who run assistants and citation benchmarks, the exposure question in particular can be answered directly.
 
 \section{Conclusion}
 Imitating AI crawlers finds almost no second web among top sites. Asking for Markdown with one header finds a twin on about one site in twenty. Half of those twins are faithful, and about one in six omits most of the human page's numbers. Verification and oversight should fetch pages the way the agent did and compare the facts.
@@ -136,12 +144,12 @@ Imitating AI crawlers finds almost no second web among top sites. Asking for Mar
 \section*{Code and Data}
 \begin{itemize}
 \item Code repository: \url{https://github.com/dheerajkumarbk-cmd/Two-Webs}
-\item Interactive dataset explorer: [URL once hosted]
+\item Interactive dataset explorer: \texttt{docs/} in the repository (static site; inspect any site's lost facts and machine-only text)
 \item Data: per-site results in \texttt{docs/data.json}; the raw crawl database (\NRequests{} completed requests, \NPages{} pages) is available on request.
 \end{itemize}
 
 \section*{Author Contributions}
-[To be completed by the authors.] AI coding assistance (Claude) was used to implement the crawler and analysis and to draft this report; the authors are responsible for all claims.
+D.K. conceived the project, directed the experimental design and the analysis, and reviewed the results and the manuscript. AI coding assistance (Claude) was used to implement the crawler and analysis and to draft this report; the author is responsible for all claims.
 
 \section*{References}
 \begin{enumerate}[label={[\arabic*]},leftmargin=2.2em]\small

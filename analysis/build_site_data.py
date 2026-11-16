@@ -119,6 +119,7 @@ def main():
     tw = sorted(twins.values(), key=lambda t: t["rank"])
     out["twins"] = [t for t in tw if t["listed"]]
     out["twins_unlisted"] = sum(1 for t in tw if not t["listed"])
+    out["twin_facts_all"] = [[t["facts"], t["lost"]] for t in tw]   # every twin, anonymous
     out["header_census"] = hdr_census.most_common(25)
     out["producers"] = dict(collections.Counter(t["producer"] for t in tw))
 

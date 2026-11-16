@@ -373,8 +373,8 @@ window.DATA = {
    "facts": 5,
    "lost": 0,
    "by_type": {
-    "number": 2,
-    "date": 3
+    "date": 3,
+    "number": 2
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -623,8 +623,8 @@ window.DATA = {
    "facts": 6,
    "lost": 0,
    "by_type": {
-    "percent": 5,
-    "number": 1
+    "number": 1,
+    "percent": 5
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -666,9 +666,9 @@ window.DATA = {
    "facts": 16,
    "lost": 0,
    "by_type": {
+    "date": 1,
     "percent": 11,
-    "number": 4,
-    "date": 1
+    "number": 4
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -766,8 +766,8 @@ window.DATA = {
    "facts": 7,
    "lost": 0,
    "by_type": {
-    "number": 3,
-    "percent": 4
+    "percent": 4,
+    "number": 3
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -880,8 +880,8 @@ window.DATA = {
    "facts": 5,
    "lost": 2,
    "by_type": {
-    "number": 3,
-    "percent": 2
+    "percent": 2,
+    "number": 3
    },
    "lost_by_type": {
     "percent": 2
@@ -925,9 +925,9 @@ window.DATA = {
    "facts": 10,
    "lost": 0,
    "by_type": {
-    "percent": 3,
+    "price": 2,
     "number": 5,
-    "price": 2
+    "percent": 3
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -1094,8 +1094,8 @@ window.DATA = {
    "facts": 5,
    "lost": 0,
    "by_type": {
-    "number": 2,
-    "percent": 3
+    "percent": 3,
+    "number": 2
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -1136,9 +1136,9 @@ window.DATA = {
    "facts": 8,
    "lost": 1,
    "by_type": {
-    "price": 1,
+    "number": 2,
     "date": 5,
-    "number": 2
+    "price": 1
    },
    "lost_by_type": {
     "date": 1
@@ -1182,8 +1182,8 @@ window.DATA = {
    "facts": 14,
    "lost": 0,
    "by_type": {
-    "percent": 4,
-    "number": 10
+    "number": 10,
+    "percent": 4
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -1227,13 +1227,13 @@ window.DATA = {
    "facts": 30,
    "lost": 26,
    "by_type": {
-    "number": 14,
     "percent": 15,
+    "number": 14,
     "price": 1
    },
    "lost_by_type": {
-    "number": 10,
     "percent": 15,
+    "number": 10,
     "price": 1
    },
    "lost_examples": [
@@ -1323,8 +1323,8 @@ window.DATA = {
    "facts": 3,
    "lost": 0,
    "by_type": {
-    "price": 1,
-    "number": 2
+    "number": 2,
+    "price": 1
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -1452,9 +1452,9 @@ window.DATA = {
    "facts": 10,
    "lost": 0,
    "by_type": {
-    "percent": 3,
+    "price": 2,
     "number": 5,
-    "price": 2
+    "percent": 3
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -1531,8 +1531,8 @@ window.DATA = {
    "facts": 9,
    "lost": 1,
    "by_type": {
-    "number": 4,
     "percent": 4,
+    "number": 4,
     "price": 1
    },
    "lost_by_type": {
@@ -1824,8 +1824,8 @@ window.DATA = {
    "facts": 126,
    "lost": 5,
    "by_type": {
-    "price": 57,
     "number": 50,
+    "price": 57,
     "percent": 19
    },
    "lost_by_type": {
@@ -1996,9 +1996,9 @@ window.DATA = {
    "facts": 39,
    "lost": 2,
    "by_type": {
-    "number": 21,
     "price": 14,
-    "percent": 4
+    "percent": 4,
+    "number": 21
    },
    "lost_by_type": {
     "number": 1,
@@ -2097,8 +2097,8 @@ window.DATA = {
    "facts": 4,
    "lost": 1,
    "by_type": {
-    "percent": 1,
-    "number": 3
+    "number": 3,
+    "percent": 1
    },
    "lost_by_type": {
     "percent": 1
@@ -2219,8 +2219,8 @@ window.DATA = {
    "facts": 2,
    "lost": 0,
    "by_type": {
-    "number": 1,
-    "percent": 1
+    "percent": 1,
+    "number": 1
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -2255,8 +2255,8 @@ window.DATA = {
    "lost": 0,
    "by_type": {
     "number": 10,
-    "percent": 3,
-    "price": 4
+    "price": 4,
+    "percent": 3
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -2349,9 +2349,9 @@ window.DATA = {
    "facts": 14,
    "lost": 0,
    "by_type": {
+    "price": 2,
     "number": 7,
     "percent": 4,
-    "price": 2,
     "date": 1
    },
    "lost_by_type": {},
@@ -2435,8 +2435,8 @@ window.DATA = {
    "lost": 62,
    "by_type": {
     "number": 166,
-    "percent": 1,
-    "date": 1
+    "date": 1,
+    "percent": 1
    },
    "lost_by_type": {
     "number": 61,
@@ -2576,8 +2576,8 @@ window.DATA = {
    "facts": 3,
    "lost": 0,
    "by_type": {
-    "number": 2,
-    "price": 1
+    "price": 1,
+    "number": 2
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -2612,13 +2612,13 @@ window.DATA = {
    "facts": 20,
    "lost": 10,
    "by_type": {
+    "percent": 1,
     "number": 12,
-    "price": 7,
-    "percent": 1
+    "price": 7
    },
    "lost_by_type": {
-    "price": 3,
-    "number": 7
+    "number": 7,
+    "price": 3
    },
    "lost_examples": [
     "$2787",
@@ -2670,13 +2670,13 @@ window.DATA = {
    "by_type": {
     "price": 11,
     "number": 41,
-    "date": 6,
-    "percent": 7
+    "percent": 7,
+    "date": 6
    },
    "lost_by_type": {
-    "date": 2,
     "number": 1,
-    "percent": 1
+    "percent": 1,
+    "date": 2
    },
    "lost_examples": [
     "24%",
@@ -2720,10 +2720,10 @@ window.DATA = {
    "facts": 8,
    "lost": 0,
    "by_type": {
+    "number": 1,
     "percent": 4,
     "date": 1,
-    "price": 2,
-    "number": 1
+    "price": 2
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -2767,8 +2767,8 @@ window.DATA = {
    "facts": 2,
    "lost": 1,
    "by_type": {
-    "number": 1,
-    "date": 1
+    "date": 1,
+    "number": 1
    },
    "lost_by_type": {
     "number": 1
@@ -2970,14 +2970,14 @@ window.DATA = {
    "facts": 7,
    "lost": 6,
    "by_type": {
-    "number": 2,
     "date": 1,
-    "percent": 4
+    "percent": 4,
+    "number": 2
    },
    "lost_by_type": {
-    "number": 2,
     "date": 1,
-    "percent": 3
+    "percent": 3,
+    "number": 2
    },
    "lost_examples": [
     "100",
@@ -3100,8 +3100,8 @@ window.DATA = {
    "facts": 5,
    "lost": 2,
    "by_type": {
-    "number": 3,
-    "percent": 2
+    "percent": 2,
+    "number": 3
    },
    "lost_by_type": {
     "percent": 2
@@ -3145,13 +3145,13 @@ window.DATA = {
    "facts": 11,
    "lost": 8,
    "by_type": {
-    "number": 8,
     "price": 2,
+    "number": 8,
     "percent": 1
    },
    "lost_by_type": {
-    "number": 5,
     "price": 2,
+    "number": 5,
     "percent": 1
    },
    "lost_examples": [
@@ -3199,9 +3199,9 @@ window.DATA = {
    "facts": 10,
    "lost": 0,
    "by_type": {
-    "percent": 3,
+    "price": 2,
     "number": 5,
-    "price": 2
+    "percent": 3
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -3245,9 +3245,9 @@ window.DATA = {
    "facts": 20,
    "lost": 0,
    "by_type": {
-    "number": 7,
     "price": 4,
-    "percent": 9
+    "percent": 9,
+    "number": 7
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -3336,10 +3336,10 @@ window.DATA = {
    "facts": 18,
    "lost": 0,
    "by_type": {
-    "price": 1,
     "date": 3,
     "number": 7,
-    "percent": 7
+    "percent": 7,
+    "price": 1
    },
    "lost_by_type": {},
    "lost_examples": [],
@@ -3381,9 +3381,9 @@ window.DATA = {
    "facts": 17,
    "lost": 3,
    "by_type": {
+    "date": 5,
     "number": 9,
-    "percent": 3,
-    "date": 5
+    "percent": 3
    },
    "lost_by_type": {
     "number": 3
@@ -3512,6 +3512,312 @@ window.DATA = {
   }
  ],
  "twins_unlisted": 1,
+ "twin_facts_all": [
+  [
+   36,
+   36
+  ],
+  [
+   8,
+   1
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   88,
+   0
+  ],
+  [
+   8,
+   8
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   88,
+   0
+  ],
+  [
+   15,
+   0
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   16,
+   0
+  ],
+  [
+   41,
+   6
+  ],
+  [
+   7,
+   0
+  ],
+  [
+   11,
+   0
+  ],
+  [
+   0,
+   0
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   10,
+   0
+  ],
+  [
+   9,
+   5
+  ],
+  [
+   8,
+   8
+  ],
+  [
+   0,
+   0
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   8,
+   1
+  ],
+  [
+   14,
+   0
+  ],
+  [
+   30,
+   26
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   10,
+   4
+  ],
+  [
+   13,
+   0
+  ],
+  [
+   10,
+   0
+  ],
+  [
+   0,
+   0
+  ],
+  [
+   9,
+   1
+  ],
+  [
+   16,
+   0
+  ],
+  [
+   17,
+   0
+  ],
+  [
+   13,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   126,
+   5
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   161,
+   1
+  ],
+  [
+   16,
+   0
+  ],
+  [
+   12,
+   1
+  ],
+  [
+   39,
+   2
+  ],
+  [
+   11,
+   4
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   7,
+   1
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   17,
+   0
+  ],
+  [
+   0,
+   0
+  ],
+  [
+   0,
+   0
+  ],
+  [
+   14,
+   0
+  ],
+  [
+   6,
+   6
+  ],
+  [
+   168,
+   62
+  ],
+  [
+   8,
+   2
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   20,
+   10
+  ],
+  [
+   65,
+   4
+  ],
+  [
+   8,
+   0
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   0,
+   0
+  ],
+  [
+   80,
+   80
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   7,
+   6
+  ],
+  [
+   13,
+   0
+  ],
+  [
+   9,
+   0
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   11,
+   8
+  ],
+  [
+   10,
+   0
+  ],
+  [
+   20,
+   0
+  ],
+  [
+   8,
+   0
+  ],
+  [
+   18,
+   0
+  ],
+  [
+   17,
+   3
+  ],
+  [
+   8,
+   1
+  ],
+  [
+   2,
+   0
+  ]
+ ],
  "header_census": [
   [
    "vary",
