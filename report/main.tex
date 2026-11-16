@@ -3,7 +3,7 @@
 %         && python analysis/make_figures.py && tectonic report/main.tex
 % Every number is a macro from numbers.tex, generated from the crawl database.
 \documentclass[10pt,a4paper]{article}
-\usepackage[margin=2.1cm]{geometry}
+\usepackage[margin=1.8cm]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern,microtype,graphicx,booktabs,enumitem,xcolor,titlesec,caption}
 \usepackage{xurl}
@@ -18,7 +18,7 @@
 
 \begin{document}
 \begin{center}
-{\LARGE\bfseries Two Webs: A Single Request Header Reveals\\[2pt] a Second Web for AI Agents\par}
+{\LARGE\bfseries Two Webs: Do the Markdown Pages Websites Serve\\[2pt] AI Agents State the Same Facts?\par}
 \vspace{8pt}
 \textbf{Dheeraj Kumar B K}\\
 Independent, Bengaluru\\[5pt]
@@ -31,10 +31,10 @@ Existing tools test this by imitating AI crawlers' User-Agent strings and compar
 We vary a second request signal and compare facts instead.
 We fetched \TrigLoaded{} high-traffic sites under five identities, twice each and interleaved: a browser, an identical control, a browser adding only \hdr{Accept: text/markdown}, an AI fetcher's User-Agent, and both together.
 Imitating the AI User-Agent returned a separate Markdown rendition on \UaTwinK{} of \UaTwinN{} sites (\UaTwinP).
-Adding the one Accept header to an ordinary browser returned one on \AccTwinK{} of \AccTwinN{} (\AccTwinP; 95\% CI \AccTwinCI); \VennMissed{} of those \VennAccept{} are invisible to User-Agent testing.
+Adding the one Accept header to an ordinary browser returned one on \AccTwinK{} of \AccTwinN{} (\AccTwinP; 95\% CI \AccTwinCI), in line with Cloudflare's published 3.9\%; \VennMissed{} of those \VennAccept{} are invisible to User-Agent testing.
 We then extracted prices, percentages, dates and numbers from both versions.
-Half of the twins (\TwNoneK{} of \TwNoneN) preserve every fact on the human page, but \TwHalfK{} (\TwHalfP) omit at least half, and prices are the most often dropped (\TypePriceP).
-The identical-request control produced no twins and lost \CtlFactsP{} of facts.
+About half of the twins (\TwNoneK{} of \TwNoneN) preserve every fact on the human page; \TwHalfK{} (\TwHalfP) omit at least half. All \TwHalfK{} are shortened pages with under half the words of the human page; among the \RendN{} full-length twins none omits half and \RendP{} of facts are absent.
+An identical-request control produced no twins and lost \CtlFactsP{} of facts.
 A few twins carry text written for the machine, including a sponsored block on a news homepage.
 All counts are automatic and unlabelled.
 We release the crawler, the analysis, an interactive dataset explorer and a single-URL checker; everything runs on a laptop CPU with no model in the loop.
@@ -44,7 +44,7 @@ We release the crawler, the analysis, an interactive dataset explorer and a sing
 \textbf{The paper in four lines.}
 (1)~Ask a website for its page the way a browser does, then ask again adding one header that requests Markdown.
 (2)~About one top site in twenty answers the second request with a different document; pretending to be an AI crawler almost never does.
-(3)~Half of those documents keep every number on the page; about one in six drops most of them, prices first.
+(3)~About half of those documents keep every number on the page. The ones that drop most numbers are all shortened pages written for agents, not conversions of the human page.
 (4)~Anyone checking what an AI agent read should fetch the page the way the agent did, and compare the facts.}}\end{center}
 
 \section{Introduction}
@@ -56,9 +56,9 @@ Prior measurement asks whether a page differs when the request claims to be an A
 
 Our main contributions are:
 \begin{enumerate}
-\item \textbf{A second trigger, measured against the first.} In one crawl with a factorial design (User-Agent $\times$ Accept header), content negotiation reveals a Markdown twin on \AccTwinP{} of sites; User-Agent imitation reveals one on \UaTwinP.
+\item \textbf{A second trigger, measured against the first.} In one crawl with a factorial design (User-Agent $\times$ Accept header), content negotiation reveals a Markdown twin on \AccTwinP{} of sites; User-Agent imitation reveals one on \UaTwinP. The prevalence itself replicates a published figure~[9]; the side-by-side comparison is new.
 \item \textbf{Fact-level accounting with an in-run control.} We count facts lost between the human and machine renditions under a rule requiring agreement across repeated fetches, and report the method's false-positive floor from an identical-request control.
-\item \textbf{An honest null alongside the positive.} Half of twins lose nothing; loss is concentrated in about one site in six. We report the distribution, not only a pooled rate.
+\item \textbf{An honest null alongside the positive.} About half of twins lose nothing, and full-length twins are close to faithful. Loss comes from a small group of shortened pages. We report the distribution and how much four sites drive the pooled rate.
 \item \textbf{Open tooling:} crawler, analysis, a \texttt{witness} command for any URL, and an interactive explorer of every site in the dataset.
 \end{enumerate}
 
@@ -69,20 +69,22 @@ Our main contributions are:
 
 \textbf{Prevalence by User-Agent.} The closest work is \emph{agentview}~[7], an open-source tool and study (August 2026) that fetched the Tranco top 1{,}000 as a browser and as seven AI User-Agents, reporting that 14.8\% of 526 analysable sites serve at least one agent an altered 200 response and that none carried manipulation text. We differ in four ways. (i)~It varies only the User-Agent and so cannot observe content negotiation. (ii)~It scores text similarity; we count facts. (iii)~It fetches each identity once and checks noise on eight sites; we fetch twice per identity and run a control on every site. (iv)~Its published dataset labels the publisher in~[1] as benign divergence; our rules flag the sponsored block.
 
-\textbf{What our method adds.} Use User-Agent comparison to find blocking and crawler-specific pages. Use ours to find the larger population of negotiated renditions and to learn whether their facts match the human page.
+\textbf{Prevalence of content negotiation.} Cloudflare scanned the 200{,}000 most visited domains and reports that Markdown content negotiation ``passes on 3.9\% of sites''~[9]. Our \AccTwinP{} on a smaller, higher-ranked sample is consistent with that figure and is a replication, not a discovery. Which agents use the feature is narrower: one site's server logs attribute 94\% of its Markdown traffic to a coding agent (Claude Code), while ChatGPT-User took Markdown on under 1\% of its requests~[10]. Neither source asks whether the Markdown rendition states the same facts as the HTML page, which is our question.
+
+\textbf{What our method adds.} Use User-Agent comparison to find blocking and crawler-specific pages. Use ours to compare the two triggers in one controlled crawl and to learn whether a negotiated rendition's facts match the human page.
 
 \section{Methods}
-\textbf{Sample.} Tranco top-sites list~[8], ranks 1--3{,}300. A first crawl under User-Agent identities established which homepages load for a browser; those \TrigLoaded{} sites form the trigger sample. Labelling rules were tuned on ranks 1--300 only, and the code was committed before the trigger crawl.
+\textbf{Sample.} Tranco top-sites list~[8], ranks 1--3{,}300. A first crawl under User-Agent identities established which homepages load for a browser; those \TrigLoaded{} sites form the trigger sample. Labelling rules were tuned on ranks 1--300 only. Three analysis rules were revised \emph{after} the trigger crawl, each applied to every page and identity without re-crawling: the twin definition (now requires that the browser received HTML), the exclusion of zero runs and long digit strings, and the removal of Markdown backslash escapes. They are post hoc and are visible in the commit history.
 
 \textbf{Identities.} Per page, in this order, repeated twice: (1)~browser; (2)~control, with headers identical to the browser; (3)~browser plus \hdr{Accept: text/markdown, text/html;q=0.9}; (4)~the Claude-User User-Agent; (5)~Claude-User plus that Accept header. All other headers are identical and cookies are cleared after every request. We fetch the homepage and one inner page chosen by a fixed rule (first same-host link whose path has at least 15 characters).
 
 \textbf{Comparison.} Raw responses, no JavaScript. Text is extracted by rule from HTML or Markdown and normalised so one sentence matches across formats. A sentence or fact is \emph{machine-only} only if it occurs in both fetches under that identity and in neither browser fetch; \emph{human-only} is the mirror. A page is comparable only if every fetch involved returned a real page (not blocked, challenged or near-empty). A \emph{Markdown twin} is a page for which the browser receives HTML and the other identity receives a non-HTML rendition at the same address.
 
-\textbf{Facts.} Prices, percentages, dates and numbers, by regular expression after removing URLs and HTML comments. Standalone years, runs of zeros and bare digit strings longer than seven digits (identifiers, timestamps, phone numbers) are excluded.
+\textbf{Facts.} Prices, percentages, dates and numbers, by regular expression after removing URLs and HTML comments. Standalone years, runs of zeros and bare digit strings longer than seven digits (identifiers, timestamps, phone numbers) are excluded. Markdown backslash escapes are removed first (\texttt{12\textbackslash.3\%} is the fact 12.3\%), and a string counted as a price, percentage or date is not counted again as a number. ``Fact'' here means any such string: port numbers, version numbers and postcodes are included, and we do not judge importance.
 
 \textbf{Uncertainty.} Site-level proportions use Wilson intervals. Facts on one page are not independent, so the interval for pooled fact loss resamples sites (5{,}000 bootstrap draws).
 
-\textbf{What did not work.} An early rule treated any machine-only sentence containing a number as a factual difference; in the 300-site pilot five of seven flags were false (country redirects, a bot wall served to the browser, extra text). A first run of the Accept experiment silently sent identical headers; we kept it as an extra noise measurement and added the control identity. Counting facts \emph{added} by twins failed: the count is dominated by metadata and postcodes, so we report none.
+\textbf{What did not work.} An early rule treated any machine-only sentence containing a number as a factual difference; in the 300-site pilot five of seven flags were false (country redirects, a bot wall served to the browser, extra text). A first run of the Accept experiment silently sent identical headers; we kept it as an extra noise measurement and added the control identity. An earlier version of the extractor missed escaped numbers in Markdown and so counted facts that were present as lost; an external review caught it on the day of submission, and all numbers here are from the corrected run. Counting facts \emph{added} by twins failed: the count is dominated by metadata and postcodes, so we report none.
 
 \textbf{Ethics.} Public pages only, about ten requests per page at under two per second per site, no logins or forms. Sites whose robots.txt disallows an identity were not requested under it (Appendix~A).
 
@@ -104,52 +106,54 @@ Both headers & \BothSites & \BothDifferK{} (\BothDifferP) & \BothFlagK{} (\BothF
 
 \textbf{The Accept header is the main trigger.} Table~1 and Figure~1: the Accept header alone finds a twin on \AccTwinP{} of sites, the AI User-Agent alone on \UaTwinP, and the control on none. Of the \VennAccept{} sites with an Accept-triggered twin, \VennMissed{} are not twins under the AI User-Agent. The twin rate lies between \RankRange{} across four popularity-rank buckets, so it is not confined to the very top of the list.
 
-\textbf{Most twins are faithful; a minority are not.} Among the \TwN{} twins whose human page states at least three facts, \TwNoneK{} (\TwNoneP) omit none and the median site omits \TwMedian. But \TwHalfK{} (\TwHalfP; \TwHalfCI) omit at least half (Figure~2, left). Pooled, \TwLost{} of \TwFacts{} facts (\TwPooled) are absent from the twin; resampling sites gives a 95\% interval of \TwBoot, wide because loss is concentrated in few sites. The pooled figure stays within \SensRange{} as the minimum-facts threshold varies from 1 to 20.
+\textbf{Most twins are faithful; a minority are not.} Among the \TwN{} twins whose human page states at least three facts, \TwNoneK{} (\TwNoneP) omit none and the median site omits none. But \TwHalfK{} (\TwHalfP; \TwHalfCI) omit at least half (Figure~2, left). Pooled, \TwLost{} of \TwFacts{} facts (\TwPooled) are absent from the twin; resampling sites gives a 95\% interval of \TwBoot. The pooled figure stays within \SensRange{} as the minimum-facts threshold varies from 1 to 20.
 
-\textbf{Prices are dropped most.} By type (Figure~2, right): prices \TypePriceK/\TypePriceN{} (\TypePriceP), percentages \TypePercentK/\TypePercentN{} (\TypePercentP), other numbers \TypeNumberK/\TypeNumberN{} (\TypeNumberP), dates \TypeDateK/\TypeDateN{} (\TypeDateP).
+\textbf{The pooled rate is driven by four sites.} Four sites supply \TopFourLost{} of the \TwLost{} absent facts (\TopFourShare). Without them, \WoFourLost{} of \WoFourFacts{} facts (\WoFourP) are absent. The pooled rate should therefore not be read as a typical site's loss.
+
+\textbf{Loss comes from shortened pages, not from conversion.} We split twins by length. \ShortN{} twins have under half the words of the human page; \ShortHalfK{} of them omit at least half the facts, and \ShortLost{} of their \ShortFacts{} facts (\ShortP) are absent. The other \RendN{} are full-length renditions: none omits half, \RendNoneK{} omit nothing, and \RendLost{} of \RendFacts{} facts (\RendP) are absent. On reading the eleven worst twins, they are separately written summaries (a product overview in place of a pricing table, a one-screen notice in place of a documentation page), so ``lost'' there means ``left out of a summary''. The half-length cut-off was chosen after seeing the data and is descriptive.
+
+\textbf{By type} (Figure~2, right): prices \TypePriceK/\TypePriceN{} (\TypePriceP), percentages \TypePercentK/\TypePercentN{} (\TypePercentP), other numbers \TypeNumberK/\TypeNumberN{} (\TypeNumberP), dates \TypeDateK/\TypeDateN{} (\TypeDateP). The price figure rests on two sites, which supply \PriceTopTwo{} of the \TypePriceK{} absent prices, so we do not claim that prices are dropped more than other facts in general.
 
 \begin{figure}[h]\centering
 \includegraphics[width=\linewidth]{fig2_facts.pdf}
 \caption{Left: share of the human page's facts absent from the Markdown twin, one bar per site (twins with at least three facts). Right: the same, pooled by fact type.}
 \end{figure}
 
-\textbf{Control.} Comparing each page with a second copy of the same browser request over \CtlPages{} pages, \CtlFactsLost{} of \CtlFacts{} facts (\CtlFactsP) counted as lost, \CtlPagesFlagged{} pages were flagged, and no twin appeared.
+\textbf{Control.} Comparing each page with a second copy of the same browser request over \CtlPages{} pages, \CtlFactsLost{} of \CtlFacts{} facts (\CtlFactsP) counted as lost, \CtlPagesFlagged{} pages were flagged, and no twin appeared. The control compares HTML with HTML. It bounds noise from changing page content, not errors in matching a fact across HTML and Markdown; for that the evidence is the \RendNoneK{} of \RendN{} full-length twins in which every fact matched, and unit tests on escaped and formatted numbers.
 
 \textbf{Machine-only content (observations, unlabelled).} Text served only to the machine includes: a block beginning ``Ally is the sponsor and source of this material'' on a news homepage, triggered by the Accept header as well as by User-Agent; a page beginning ``You are an AI agent reading railway.com''; a status page adding a ``Scope note'' on what to check ``before concluding a Cloudflare-wide outage''; and a vendor page stating ``43\% of enterprise agent stacks already use Redis for agent data storage'', absent from that page's raw HTML. The automatic ``addressed to AI'' label matches phrases such as ``AI agents'' that many of these vendors use about their own products, so the flagged rate in Table~1 is an upper bound.
 
 \textbf{User-Agent crawl.} In \GenLoaded{} further sites crawled under seven AI User-Agents, \GenComparable{} were comparable and \GenFlagK{} (\GenFlagP) were flagged; on reading, two are clear cases (the sponsored block above, and a cloud provider telling AI fetchers ``106 availability zones in 31 regions'' and browsers ``109 \ldots\ in 32''). This agrees with~[7] that manipulation keyed on User-Agent is rare among top sites.
 
 \section{Discussion and Limitations}
-The second web is being built mostly in the open, through content negotiation, by sites that want agents to read them. Half of these renditions are faithful. The safety-relevant part is the tail: on about one twin in six, an agent is given a page missing most of the numbers a person would see, prices above all, and occasionally a sentence a person would not see. Oversight that re-fetches an agent's sources, evaluations that replay browsing, and citation-faithfulness benchmarks all assume the reviewer can obtain what the agent read. One request header is enough to break that assumption on roughly one top site in twenty. The practical recommendation is narrow: record or reproduce the agent's request headers when verifying, and compare facts, not similarity.
-
-\textbf{What the design gets right.} Three choices make the result trustworthy at this scale: a factorial design that isolates each request signal; a control run inside the same crawl, so the noise floor is measured and not assumed; and facts counted mechanically, so no model's judgement sits between the data and the numbers. The whole pipeline reruns on a laptop CPU from one command per stage, and every number in this report is generated from the database.
+The second web is being built mostly in the open, through content negotiation, by sites that want agents to read them. Full-length renditions are close to faithful. The safety-relevant part is the tail: on about one twin in six, the site answers with a shortened page of its own writing, so an agent is given a page missing most of the numbers a person would see, and occasionally a sentence a person would not see. Current exposure is narrow: the header is sent mainly by coding agents, not by consumer assistants~[10]. Oversight that re-fetches an agent's sources, evaluations that replay browsing, and citation-faithfulness benchmarks all assume the reviewer can obtain what the agent read. One request header is enough to change the document on roughly one top site in twenty, and to change its facts substantially on about one in a hundred. The practical recommendation is narrow: record or reproduce the agent's request headers when verifying, and compare facts, not similarity.
 
 \textbf{Limitations, and what would resolve each.} Each limit below is a bounded piece of follow-up work, and the tooling for most of it already exists.
 
 {\small\begin{tabular}{@{}p{0.29\linewidth}p{0.67\linewidth}@{}}\toprule
 \textbf{Limit of this study} & \textbf{What resolves it}\\\midrule
 Labels are automatic; only the control bounds their error & Two-person labelling with reported agreement. The export, import and agreement commands are built and tested; the weekend did not allow the labelling itself.\\
-Exposure is not established: we did not measure which deployed assistants send the Markdown Accept header & Log the headers real assistants send to a page we control, then weight the site-level rate by assistant. If adoption of the header grows, exposure approaches the rate reported here.\\
+Exposure is not established: we did not measure which deployed assistants send the Markdown Accept header; one site's logs suggest mainly coding agents~[10] & Log the headers real assistants send to a page we control, then weight the site-level rate by assistant.\\
 Raw-HTML baseline: content people see only after JavaScript runs is not captured & Add a rendered-browser identity as a sixth arm of the same design.\\
 One day, one location (India), two pages per site & Repeat crawls from several countries; the crawler is resumable and the storage deduplicated for this.\\
 User-Agent results are a lower bound, since IP-verifying sites show us the human page & Requests from verified fetcher address ranges, which needs an assistant provider's cooperation.\\
-Regular expressions miss facts stated in words and cannot judge whether an omitted number mattered & A labelled sample of omissions graded for importance.\\\bottomrule
+Regular expressions miss facts stated in words, count version and port numbers as facts, and cannot judge whether an omitted number mattered & A labelled sample of omissions graded for importance.\\\bottomrule
 \end{tabular}}
 
-\textbf{Future Work.} Beyond closing the limits above: an end-to-end test asking deployed assistants about the confirmed pages and recording whether sponsorship and omitted facts surface in their answers; a per-site risk score combining trigger breadth, fact loss and machine-only claims; a public tracker of sites whose twin diverges; and a verifier library that fetches a cited page as the agent did. With guidance from researchers who run assistants and citation benchmarks, the exposure question in particular can be answered directly.
+\textbf{Future Work.} An end-to-end test asking deployed assistants about these pages and recording whether sponsorship and omitted facts surface in their answers; a public tracker of sites whose twin diverges; and a verifier library that fetches a cited page as the agent did. With guidance from researchers who run assistants and citation benchmarks, the exposure question can be answered directly.
 
 \section{Conclusion}
-Imitating AI crawlers finds almost no second web among top sites. Asking for Markdown with one header finds a twin on about one site in twenty. Half of those twins are faithful, and about one in six omits most of the human page's numbers. Verification and oversight should fetch pages the way the agent did and compare the facts.
+Imitating AI crawlers finds almost no second web among top sites. Asking for Markdown with one header finds a twin on about one site in twenty. About half of those twins keep every fact, full-length twins are close to faithful, and about one in six is a shortened page that omits most of the human page's numbers. Verification and oversight should fetch pages the way the agent did and compare the facts.
 
 \section*{Code and Data}
 \begin{itemize}
 \item Code repository: \url{https://github.com/dheerajkumarbk-cmd/Two-Webs}
 \item Interactive dataset explorer: \url{https://two-webs.vercel.app/} (inspect any site's lost facts and machine-only text; source in \texttt{docs/})
-\item Data: per-site results in \texttt{docs/data.json}; the raw crawl database (\NRequests{} completed requests, \NPages{} pages) is available on request.
+\item Data: per-site results in \texttt{docs/data.json}, including the quoted machine-only sentences with their site and identity; the extracted text of every twin and its human page in \texttt{release/twin\_texts.json.gz}, from which the fact comparison can be re-run. The raw crawl database (\NRequests{} completed requests, \NPages{} pages, 2\,GB) is available on request.
 \end{itemize}
 
 \section*{Author Contributions}
-D.K. conceived the project, directed the experimental design and the analysis, and reviewed the results and the manuscript. AI coding assistance (Claude) was used to implement the crawler and analysis and to draft this report; the author is responsible for all claims.
+D.K. conceived the project, directed the experimental design and the analysis, and reviewed the results and the manuscript. AI coding assistance (Claude) was used to implement the crawler and analysis and to draft this report; the author is responsible for all claims. An AI-run adversarial review of the submission found the extractor error described in Methods.
 
 \section*{References}
 \begin{enumerate}[label={[\arabic*]},leftmargin=2.2em]\small
@@ -161,6 +165,8 @@ D.K. conceived the project, directed the experimental design and the analysis, a
 \item HasData (2026). \emph{How Sites Answer GPTBot.} \url{https://dev.to/hasdata_com/how-sites-answer-gptbot-classified-in-python-546o}
 \item Islampure, T. (2026). \emph{agentview: The Agent-Facing Web, study results.} \url{https://github.com/tusharislampure29/agentview}
 \item Le Pochat, V., et al. (2019). \emph{Tranco: A Research-Oriented Top Sites Ranking Hardened Against Manipulation.} NDSS.
+\item Cloudflare (2026). \emph{Introducing the Agent Readiness score.} \url{https://blog.cloudflare.com/agent-readiness/}
+\item Klubochkina, R. and Turner, T. (2026). \emph{Making your site visible to LLMs and AI agents.} Evil Martians. \url{https://evilmartians.com/chronicles/how-to-make-your-website-visible-to-llms}
 \end{enumerate}
 
 \appendix

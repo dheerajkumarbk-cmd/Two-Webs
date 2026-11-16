@@ -27,6 +27,7 @@ HARD = tuple(t + ":" for t in extract.HARD_TYPES)
 META = ("title:", "description:", "image:", "url:", "og:", '"og:', "twitter:", '"twitter:',
         "<!--", "published:", "{", "[](", "canonical", "lang:")
 # Sites left out of the public listing (adult content); they stay in every count.
+RENDITION_RATIO = 0.5
 UNLISTED = re.compile(r"xham|sex|porn|fap|redwap|simpcity|kir2kos|xhlink|theyarehuge", re.I)
 
 
@@ -77,6 +78,11 @@ def main():
                        " AND status=200 ORDER BY rep LIMIT 1", (page_id, ident)).fetchone()
         return (json.loads(h[0] or "{}"), h[1] or "", h[2]) if h else ({}, "", None)
 
+    def words_of(page_id, ident):
+        w = db.execute("SELECT MAX(e.n_words) FROM extracts e JOIN fetches f ON f.fetch_id=e.fetch_id"
+                       " WHERE f.page_id=? AND f.identity=? AND e.outcome='ok'", (page_id, ident)).fetchone()
+        return w[0] or 0
+
     twins, hdr_census = {}, collections.Counter()
     for (dom, kind), m in per.items():
         r = m.get(ACCEPT)
@@ -110,6 +116,7 @@ def main():
                "human_only": clean(r["browser_only_text"], 4, 240),
                "n_machine_only": r["n_ai_only"], "n_human_only": r["n_browser_only"],
                "html_bytes": html_bytes, "md_bytes": md_bytes,
+               "html_words": words_of(r["page_id"], "browser"), "md_words": words_of(r["page_id"], ACCEPT),
                "producer": producer, "server": (hdr.get("server") or "").split("/")[0][:24],
                "found_by_user_agent": dom in ua_t,
                "listed": not UNLISTED.search(dom)}
@@ -117,7 +124,15 @@ def main():
         if cur is None or rec["facts"] > cur["facts"]:
             twins[dom] = rec
     tw = sorted(twins.values(), key=lambda t: t["rank"])
-    out["twins"] = [t for t in tw if t["listed"]]
+    for t in tw:
+        # A twin with under a quarter of the human page's words is a short notice or
+        # summary, not a rendition of the page; its "lost" facts are reported apart.
+        t["word_ratio"] = (t["md_words"] / float(t["html_words"])) if t["html_words"] else None
+        t["full_rendition"] = bool(t["word_ratio"] is not None and t["word_ratio"] >= RENDITION_RATIO)
+        if not t["listed"]:                       # counted in every total, shown without detail
+            t.update(domain="(unlisted site)", lost_examples=[], kept_examples=[],
+                     machine_only=[], human_only=[], server="")
+    out["twins"] = tw
     out["twins_unlisted"] = sum(1 for t in tw if not t["listed"])
     out["twin_facts_all"] = [[t["facts"], t["lost"]] for t in tw]   # every twin, anonymous
     out["header_census"] = hdr_census.most_common(25)
@@ -163,6 +178,26 @@ def main():
                      "lose_none": rate(sum(1 for t in ts if t["lost"] == 0), len(ts))})
     out["sensitivity"] = sens
 
+    # ---- 5. how concentrated is the loss, and is the twin a full rendition ----
+    t3 = [t for t in tw if t["facts"] >= 3]
+    by_loss = sorted(t3, key=lambda t: -t["lost"])
+
+    def block(ts):
+        n, l = sum(t["facts"] for t in ts), sum(t["lost"] for t in ts)
+        return {"twins": len(ts), "facts": n, "lost": l, "pooled_loss": (l / float(n)) if n else None,
+                "lose_half": rate(sum(1 for t in ts if t["lost"] >= 0.5 * t["facts"]), len(ts)),
+                "lose_none": rate(sum(1 for t in ts if t["lost"] == 0), len(ts))}
+    out["concentration"] = {
+        "top4_lost": sum(t["lost"] for t in by_loss[:4]),
+        "top4_sites": [t["domain"] for t in by_loss[:4]],
+        "without_top4": block(by_loss[4:]),
+        "full_renditions": block([t for t in t3 if t["full_rendition"]]),
+        "short_twins": block([t for t in t3 if not t["full_rendition"]]),
+        "rendition_ratio": RENDITION_RATIO}
+    lp = sorted(((t["lost_by_type"].get("price", 0), t["domain"]) for t in tw), reverse=True)
+    out["concentration"]["price_top2_lost"] = lp[0][0] + lp[1][0]
+    out["concentration"]["price_top2_sites"] = [lp[0][1], lp[1][1]]
+
     # control: identical requests, same accounting
     ctl = [r for r in rows if r["comparable"] and r["identity"] == CONTROL]
     c_facts = c_lost = 0
@@ -188,6 +223,23 @@ def main():
         " JOIN sites s ON s.site_id=p.site_id WHERE s.sample='general' AND s.domain='alibabacloud.com'"
         " AND c.flagged=1 LIMIT 1").fetchone()
     out["ua_case"] = {"machine": clean(g[0], 1, 260), "human": clean(g[1], 1, 260)} if g else None
+    # the sentences quoted in the report, with the site and identity that received them
+    quoted = []
+    for phrase in ("sponsor and source of this material", "You are an AI agent reading",
+                   "before concluding a Cloudflare-wide outage", "of enterprise agent stacks",
+                   "availability zones"):
+        q = db.execute(
+            "SELECT s.domain, s.sample, c.identity, c.ai_only_text, c.browser_only_text FROM comparisons c"
+            " JOIN pages p ON p.page_id=c.page_id JOIN sites s ON s.site_id=p.site_id"
+            " WHERE c.comparable=1 AND c.ai_only_text LIKE ? ORDER BY s.sample DESC LIMIT 1",
+            ("%" + phrase + "%",)).fetchone()
+        if q:
+            def pick(text):
+                ls = [l for l in (text or "").split("\n") if phrase.lower() in l.lower()]
+                return re.sub(r"\s+", " ", ls[0])[:300] if ls else ""
+            quoted.append({"domain": q[0], "sample": q[1], "identity": q[2],
+                           "machine": pick(q[3]), "human": pick(q[4])})
+    out["quoted_cases"] = quoted
 
     docs = os.path.join(C.ROOT, "docs")
     os.makedirs(docs, exist_ok=True)
@@ -196,9 +248,9 @@ def main():
         f.write(text)
     with open(os.path.join(docs, "data.js"), "w", encoding="utf-8") as f:
         f.write("window.DATA = " + text + ";\n")
-    for k in ("venn", "producers", "header_census", "rank_buckets", "by_type", "sensitivity", "control", "counts"):
+    for k in ("venn", "producers", "header_census", "rank_buckets", "by_type", "sensitivity", "control", "counts", "concentration", "quoted_cases"):
         print(k, json.dumps(out[k], default=str)[:900])
-    print("twins listed:", len(out["twins"]), "unlisted:", out["twins_unlisted"])
+    print("twins:", len(out["twins"]), "of which unlisted:", out["twins_unlisted"])
 
 
 if __name__ == "__main__":

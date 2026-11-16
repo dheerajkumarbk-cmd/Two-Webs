@@ -76,6 +76,8 @@ def _markdown_to_text(raw):
     raw = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", raw)
     raw = re.sub(r"\[([^\]]+)\]\[[^\]]*\]", r"\1", raw)  # reference-style links
     raw = re.sub(r"(?m)^\s{0,3}(#{1,6}|>|[-*+]|\d+\.)\s+", "", raw)
+    # Markdown backslash escapes (12\.3% or \$5) would hide a fact from the patterns.
+    raw = re.sub(r"\\([\\`*_{}\[\]()#+\-.!|>~$%&<=:])", r"\1", raw)
     raw = re.sub(r"[*_`|]+", " ", raw)
     return raw
 
@@ -147,8 +149,14 @@ HARD_TYPES = ("price", "percent", "date", "number")
 def facts(text):
     """Mechanically extract facts as a set of 'type:value' strings."""
     out = set()
+    taken = []          # spans already claimed, so $150,000 is a price and not also a number
     for kind, pat in _FACT_PATTERNS:
-        for m in pat.findall(text):
+        spans = []
+        for mo in pat.finditer(text):
+            m = mo.group(0)
+            if kind == "number" and any(mo.start() < e and s < mo.end() for s, e in taken):
+                continue
+            spans.append(mo.span())
             v = re.sub(r"[\s,]+", "", m.lower())
             # Not facts: runs of zeros (colour codes, padding) and long bare
             # digit strings (identifiers, timestamps, phone numbers).
@@ -156,6 +164,7 @@ def facts(text):
                                      (v.isdigit() and len(v) > 7 and "," not in m)):
                 continue
             out.add(kind + ":" + v)
+        taken.extend(spans)
     for m in _ENTITY.findall(text):
         out.add("entity:" + re.sub(r"\s+", " ", m.lower()))
     return out

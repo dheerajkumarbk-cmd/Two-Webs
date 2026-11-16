@@ -50,6 +50,17 @@ hi = max(x["pooled_loss"] for x in D["sensitivity"])
 put("SensRange", "%.1f--%.1f\\%%" % (100 * lo, 100 * hi))
 for m in D["by_type"]:
     rate("Type" + m["type"].capitalize(), m)
+k = D["concentration"]
+put("TopFourLost", num(k["top4_lost"]))
+put("TopFourShare", pct(k["top4_lost"] / float(s["pooled_loss"] * s["facts"]), 0))
+for tag, key in (("WoFour", "without_top4"), ("Rend", "full_renditions"), ("Short", "short_twins")):
+    put(tag + "N", k[key]["twins"])
+    put(tag + "Lost", num(k[key]["lost"]))
+    put(tag + "Facts", num(k[key]["facts"]))
+    put(tag + "P", pct(k[key]["pooled_loss"]) if k[key]["pooled_loss"] is not None else "n/a")
+    put(tag + "HalfK", k[key]["lose_half"]["k"])
+    put(tag + "NoneK", k[key]["lose_none"]["k"])
+put("PriceTopTwo", num(k["price_top2_lost"]))
 c = D["control"]
 put("CtlPages", num(c["pages"]))
 put("CtlFacts", num(c["facts"]))

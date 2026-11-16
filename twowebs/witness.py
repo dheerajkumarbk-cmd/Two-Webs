@@ -83,6 +83,10 @@ def report(url, results):
             facts = _as_list(r.get("ai_only_facts"))
             if facts:
                 _say("    AI-only facts: %s" % ", ".join(str(x) for x in facts))
-    _say("FLAGGED: AI fetchers were served different content." if any_flagged
-         else "Not flagged.")
+    if any_flagged:
+        _say("FLAGGED: AI fetchers were served different content.")
+    elif not any(r.get("comparable") for r in results.values()):
+        _say("No verdict: no identity could be compared (fetches failed or were blocked).")
+    else:
+        _say("Not flagged.")
     return any_flagged

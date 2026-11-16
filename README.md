@@ -1,6 +1,20 @@
-# Two Webs: project structure
+# Two Webs
 
-Measures how often real websites serve AI fetchers different facts than they serve browsers. This file is the contract every module is built against. Research design: `../two_webs_overview.md`.
+Do websites hand AI agents a different page than they hand people? This project fetches each page as a browser, as an identical control, with one added header (`Accept: text/markdown`), as an AI User-Agent, and with both, then compares the **facts** (prices, percentages, dates, numbers) in what comes back.
+
+- Report: `report/Two_Webs_report_v2.pdf`
+- Interactive results: https://two-webs.vercel.app/ (source in `docs/`)
+- Per-site results: `docs/data.json`. Text of every Markdown twin and its human page: `release/twin_texts.json.gz`, so the fact comparison can be re-run without the crawl database.
+
+Quick start (Python 3.7+, one dependency):
+
+```
+pip install .
+twowebs witness https://example.com      # check one live URL
+python -m unittest discover -s tests     # 170+ tests, no network
+```
+
+All counts are automatic; nothing was hand-labelled. The rest of this file is the build contract for the code.
 
 ## Layers
 

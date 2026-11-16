@@ -193,3 +193,14 @@ class MarkdownVsHtmlTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EscapeAndOverlapTests(unittest.TestCase):
+    def test_markdown_escapes_do_not_hide_facts(self):
+        md = extract._markdown_to_text("Rated 4\.5 of 5, up 12\.3% to \$99")
+        got = set(x for x in extract.facts(md) if not x.startswith("entity"))
+        self.assertEqual(got, {"number:4.5", "percent:12.3%", "price:$99"})
+
+    def test_price_and_percent_are_not_also_numbers(self):
+        got = set(x for x in extract.facts("costs $150,000 or 12.3% of 3306") if not x.startswith("entity"))
+        self.assertEqual(got, {"price:$150000", "percent:12.3%", "number:3306"})

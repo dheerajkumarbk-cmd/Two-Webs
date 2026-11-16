@@ -51,13 +51,13 @@ ul{padding-left:20px;max-width:48em}li{margin:4px 0}footer{margin-top:52px;color
 <div class="grid" id="hero"></div>
 <p class="note">One crawl, 14–15 November 2026, one network location (India), raw HTML without JavaScript. Counts are automatic; no case has been hand-labelled. Intervals are 95%.</p>
 
-<h2>1 · Which signal reveals the second web?</h2>
+<h2>1 · Which request signal returns a different document?</h2>
 <p>Each page was fetched five ways, twice each, interleaved in time. The control repeats the browser's own request, so whatever it shows is the method's noise.</p>
 <div class="panel"><div class="ctl">Show share of sites that <span id="mbtn"></span></div><svg id="trig" viewBox="0 0 900 250" role="img" aria-label="Trigger chart"></svg></div>
 <p class="note" id="venn"></p>
 
 <h2>2 · Do the facts survive? Inspect any site</h2>
-<p>For each Markdown twin we extracted the numbers, prices, percentages and dates the human page states, and checked which are absent from the twin. Each bar is one site. Click a bar or a table row to see exactly what was lost.</p>
+<p>For each Markdown twin we extracted the numbers, prices, percentages and dates the human page states, and checked which are absent from the twin. Each bar is one site. Click a bar or a table row to see exactly what was lost.</p><p id="rendnote"></p>
 <div class="panel">
  <div class="ctl"><label for="mf">Only sites whose human page states at least <b id="mfv">3</b> facts</label><input type="range" id="mf" min="1" max="20" value="3">
  <label for="srt">Sort</label><select id="srt"><option value="loss">by share lost</option><option value="rank">by popularity rank</option><option value="facts">by facts on page</option></select></div>
@@ -141,6 +141,7 @@ function pick(t){sel=t;drawStrip();drawTable();const chips=(a,c)=>a.length?`<div
  <div class="two"><div><div class="who hu">Facts on the human page, absent from the twin</div>${chips(t.lost_examples,'lost')}<div class="who hu">Kept</div>${chips(t.kept_examples,'')}
  <div class="who hu">Sentences only people get (${t.n_human_only})</div>${t.human_only.map(x=>`<span class="q">${esc(x)}</span>`).join('')||'<span class="q">none</span>'}</div>
  <div><div class="who ai">Sentences only the machine gets (${t.n_machine_only})</div>${t.machine_only.map(x=>`<span class="q">${esc(x)}</span>`).join('')||'<span class="q">none</span>'}</div></div>`}
+{const k=D.concentration,r=k.full_renditions,sh=k.short_twins,w=k.without_top4;$('#rendnote').innerHTML=`<strong>Where the loss comes from.</strong> ${sh.twins} twins have under half the words of the human page: they are shortened pages written for agents, and ${sh.lose_half.k} of them omit at least half the facts (${sh.lost} of ${sh.facts} facts absent). The other ${r.twins} are full-length renditions: ${r.lose_half.k} omit half, ${r.lose_none.k} omit nothing, ${r.lost} of ${r.facts} facts absent (${p1(r.pooled_loss)}). Four sites supply ${k.top4_lost} of all absent facts; without them the pooled rate is ${p1(w.pooled_loss)}. Counts are for twins with at least three facts. A "fact" is any price, percentage, date or number, including version and port numbers.`}
 $('#mf').oninput=drawStrip;$('#srt').onchange=drawStrip;
 
 /* 3 small charts */
@@ -157,7 +158,7 @@ let sk='share',dir=-1;function drawTable(){const f=$('#filter').value.toLowerCas
  document.querySelectorAll('#tw tbody tr').forEach(r=>r.onclick=()=>{pick(TW.find(t=>t.domain===r.dataset.d));$('#detail').scrollIntoView({behavior:'smooth',block:'nearest'})})}
 document.querySelectorAll('#tw th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;dir=k===sk?-dir:1;sk=k;drawTable()});$('#filter').oninput=drawTable;
 pick(TW.find(t=>t.domain==='railway.app')||TW.slice().sort((a,b)=>b.share-a.share)[0]);
-$('#foot').textContent=`${D.counts.sites.toLocaleString()} sites loaded, ${D.counts.pages.toLocaleString()} pages, ${D.counts.requests.toLocaleString()} completed requests. ${D.twins_unlisted} twin site with adult content is counted but not listed. Sites are named only for content they serve publicly to any client that asks; no claim about intent is made. Generated ${D.generated}.`;
+$('#foot').textContent=`${D.counts.sites.toLocaleString()} sites loaded, ${D.counts.pages.toLocaleString()} pages, ${D.counts.requests.toLocaleString()} completed requests. ${D.twins_unlisted} twin site with adult content is counted and shown without its name. Sites are named only for content they serve publicly to any client that asks; no claim about intent is made. Generated ${D.generated}.`;
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{drawTrig();drawStrip()});
 </script>
 </body></html>
