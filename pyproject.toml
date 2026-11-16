@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "twowebs"
+version = "0.1.0"
+description = "Measure whether a website serves AI agents a different page than it serves people: trigger-factorised crawl, fact-level diff, single-URL witness."
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = ["httpx>=0.24"]
+
+[project.scripts]
+twowebs = "twowebs.cli:main"
+
+[tool.setuptools]
+packages = ["twowebs"]

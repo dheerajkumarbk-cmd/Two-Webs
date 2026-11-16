@@ -5,121 +5,159 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Two Webs</title>
 <style>
-:root{--bg:#fbfaf7;--ink:#1c1b19;--mute:#6b675f;--line:#dedad2;--card:#ffffff;--a:#b4411f;--b:#2f5d8a;--c:#8a8578;--ok:#2e6b4a}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15161a;--ink:#ecebe6;--mute:#9a978f;--line:#2e3037;--card:#1d1f25;--a:#f0825f;--b:#7fb0e0;--c:#77746c;--ok:#7cc79d}}
-:root[data-theme="dark"]{--bg:#15161a;--ink:#ecebe6;--mute:#9a978f;--line:#2e3037;--card:#1d1f25;--a:#f0825f;--b:#7fb0e0;--c:#77746c;--ok:#7cc79d}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Georgia,"Iowan Old Style",serif}
-main{max-width:920px;margin:0 auto;padding:32px 16px 80px}
-h1{font-size:clamp(30px,6vw,52px);line-height:1.05;margin:0 0 12px;letter-spacing:-.02em}
-h2{font-size:24px;margin:56px 0 8px}h3{font-size:17px;margin:0 0 6px}
-p{margin:8px 0}.lede{font-size:20px;color:var(--mute);max-width:42em}
-.sans,table,button,input,.tag,.num small{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+:root{--bg:#fbfaf7;--ink:#1c1b19;--mute:#6b675f;--line:#dedad2;--card:#fff;--a:#b4411f;--b:#2f5d8a;--c:#8a8578;--g:#2e6b4a;--hl:#f3e6df}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15161a;--ink:#ecebe6;--mute:#9a978f;--line:#2e3037;--card:#1d1f25;--a:#f0825f;--b:#7fb0e0;--c:#8d8a82;--g:#7cc79d;--hl:#3a2a24}}
+:root[data-theme="dark"]{--bg:#15161a;--ink:#ecebe6;--mute:#9a978f;--line:#2e3037;--card:#1d1f25;--a:#f0825f;--b:#7fb0e0;--c:#8d8a82;--g:#7cc79d;--hl:#3a2a24}
+*{box-sizing:border-box}html,body{overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Georgia,"Iowan Old Style",serif}
+main{max-width:940px;margin:0 auto;padding:32px 16px 80px}
+h1{font-size:clamp(30px,6vw,50px);line-height:1.05;margin:0 0 12px;letter-spacing:-.02em}
+h2{font-size:23px;margin:52px 0 6px}h3{font-size:16px;margin:0 0 6px}
+p{margin:8px 0;max-width:46em}.lede{font-size:19px;color:var(--mute)}
+.ui,table,button,input,select,svg text,.tag,.num small,.tip,label{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
 .kicker{font:600 12px/1 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--a);margin-bottom:14px}
-.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin:20px 0}
-.num{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
-.num b{display:block;font:700 34px/1 system-ui,sans-serif;color:var(--a)}.num.b b{color:var(--b)}.num.c b{color:var(--c)}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin:18px 0}
+.num{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
+.num b{display:block;font:700 32px/1 system-ui,sans-serif;color:var(--a)}.num.b b{color:var(--b)}.num.c b{color:var(--c)}.num.g b{color:var(--g)}
 .num small{display:block;color:var(--mute);font-size:13px;margin-top:8px;line-height:1.35}
-.bars{margin:18px 0}.bar{display:grid;grid-template-columns:minmax(120px,230px) 1fr;gap:10px;align-items:center;margin:9px 0;font:14px system-ui,sans-serif}
-.track{background:var(--line);border-radius:5px;height:22px;position:relative;overflow:hidden}.fill{height:100%;border-radius:5px}
-.bar span.v{position:absolute;right:8px;top:2px;font-size:12.5px}
-.note{font:13.5px/1.45 system-ui,sans-serif;color:var(--mute);border-left:3px solid var(--line);padding:2px 0 2px 12px;margin:14px 0}
-.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
-.card q,.q{display:block;font-size:14.5px;margin:6px 0;quotes:none;overflow-wrap:anywhere}
-.who{font:600 11px system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-top:10px}.who.ai{color:var(--a)}.who.hu{color:var(--b)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin:14px 0;min-width:0}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;font:13px system-ui,sans-serif;color:var(--mute)}
+button.seg{border:1px solid var(--line);background:transparent;color:var(--ink);padding:5px 11px;border-radius:99px;font-size:13px;cursor:pointer}
+button.seg[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+svg{display:block;width:100%;height:auto;overflow:visible}svg text{font-size:12px;fill:var(--mute)}svg .lab{fill:var(--ink)}
+.note{font:13.5px/1.45 system-ui,sans-serif;color:var(--mute);border-left:3px solid var(--line);padding:2px 0 2px 12px;margin:12px 0;max-width:52em}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;line-height:1.35;padding:7px 9px;border-radius:7px;max-width:280px;z-index:9;display:none}
+.two{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.who{font:600 11px system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;margin:10px 0 4px}.who.ai{color:var(--a)}.who.hu{color:var(--b)}
+.q{display:block;font-size:14.5px;margin:5px 0;overflow-wrap:anywhere}
+.chips span{display:inline-block;font:12.5px ui-monospace,Consolas,monospace;border-radius:5px;padding:1px 6px;margin:2px 3px 2px 0;border:1px solid var(--line)}
+.chips.lost span{background:var(--hl);border-color:var(--a)}
 .tag{display:inline-block;font-size:11.5px;border:1px solid var(--line);border-radius:99px;padding:1px 8px;color:var(--mute);white-space:nowrap}
-.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
-table{border-collapse:collapse;width:100%;font-size:13.5px}th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-weight:600;color:var(--mute);cursor:pointer;white-space:nowrap}td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
-input{width:100%;padding:9px 12px;margin:10px 0;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font-size:14px}
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card);max-height:440px;overflow-y:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-weight:600;color:var(--mute);cursor:pointer;white-space:nowrap;position:sticky;top:0;background:var(--card)}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}tbody tr{cursor:pointer}tbody tr:hover,tbody tr.sel{background:var(--hl)}
+input[type=text],select{padding:8px 11px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font-size:14px}
+input[type=text]{width:100%;margin:10px 0}input[type=range]{accent-color:var(--a)}
 code{font:13px ui-monospace,Consolas,monospace;background:var(--card);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
-.num,.bar>div{min-width:0}html,body{overflow-x:hidden}
-pre{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.5 ui-monospace,Consolas,monospace}
-ul{padding-left:20px}li{margin:4px 0}footer{margin-top:56px;color:var(--mute);font:13px system-ui,sans-serif}
+pre{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.5 ui-monospace,Consolas,monospace}
+ul{padding-left:20px;max-width:48em}li{margin:4px 0}footer{margin-top:52px;color:var(--mute);font:13px system-ui,sans-serif}
 </style>
 </head>
 <body><main>
 <div class="kicker">AI × Epistemics Sprint · Apart Research · November 2026</div>
 <h1>Two Webs</h1>
-<p class="lede">Websites are starting to hand AI assistants a different page than they hand people. We measured how often, what triggers it, and what happens to the facts.</p>
-
+<p class="lede">Some websites hand AI agents a different page than they hand people. We measured which request signal triggers it, and whether the facts survive. This page is the dataset: every chart is drawn from the crawl, and every site can be inspected.</p>
 <div class="grid" id="hero"></div>
-<p class="note">Every number on this page is an automatic count from one crawl of high-traffic sites on 14–15 November 2026, from one network location in India. Nothing here has been hand-labelled yet. Rates are per site, with 95% Wilson intervals.</p>
+<p class="note">One crawl, 14–15 November 2026, one network location (India), raw HTML without JavaScript. Counts are automatic; no case has been hand-labelled. Intervals are 95%.</p>
 
-<h2>One header is enough</h2>
-<p>Earlier tools test for a second web by pretending to be an AI crawler: they change the <code>User-Agent</code>. We also tested a normal browser that adds a single header, <code>Accept: text/markdown</code>, the way some agent tools ask for pages. The same sites, the same minutes, each request sent twice.</p>
-<div class="bars" id="bars"></div>
+<h2>1 · Which signal reveals the second web?</h2>
+<p>Each page was fetched five ways, twice each, interleaved in time. The control repeats the browser's own request, so whatever it shows is the method's noise.</p>
+<div class="panel"><div class="ctl">Show share of sites that <span id="mbtn"></span></div><svg id="trig" viewBox="0 0 900 250" role="img" aria-label="Trigger chart"></svg></div>
 <p class="note" id="venn"></p>
 
-<h2>What the Markdown twin does to the facts</h2>
-<p>For each twin we extracted the numbers, prices, percentages and dates stated in the human page and checked which of them survive in the version served on request. A fact counts as lost only if it appears in both browser fetches and in neither Markdown fetch.</p>
-<div class="grid" id="facts"></div>
-<p class="note">We do not report a rate for facts <em>added</em> by the twin. The extractor counts page metadata, postcodes and phone numbers as "added facts", so that count is not yet meaningful. Individual added claims are shown below as examples only.</p>
+<h2>2 · Do the facts survive? Inspect any site</h2>
+<p>For each Markdown twin we extracted the numbers, prices, percentages and dates the human page states, and checked which are absent from the twin. Each bar is one site. Click a bar or a table row to see exactly what was lost.</p>
+<div class="panel">
+ <div class="ctl"><label for="mf">Only sites whose human page states at least <b id="mfv">3</b> facts</label><input type="range" id="mf" min="1" max="20" value="3">
+ <label for="srt">Sort</label><select id="srt"><option value="loss">by share lost</option><option value="rank">by popularity rank</option><option value="facts">by facts on page</option></select></div>
+ <svg id="strip" viewBox="0 0 900 230" role="img" aria-label="Fact loss per site"></svg>
+ <div class="grid" id="live"></div>
+</div>
+<div class="panel" id="detail"></div>
 
-<h2>What sites say only to the machine</h2>
-<div class="cards" id="cases"></div>
-<p class="note">"Shown to people" is the raw HTML a browser receives before any JavaScript runs. Text that a page adds with JavaScript is not captured, so a sentence listed as machine-only may still be visible in a rendered browser.</p>
+<h2>3 · Which kinds of fact go missing?</h2>
+<div class="two"><div class="panel"><h3>Share lost, by fact type</h3><svg id="types" viewBox="0 0 430 200"></svg></div>
+<div class="panel"><h3>Twin rate by popularity rank</h3><svg id="ranks" viewBox="0 0 430 200"></svg></div></div>
+<p class="note" id="ctlnote"></p>
 
-<h2>All Markdown twins found</h2>
-<input id="filter" placeholder="Filter by site or label…" aria-label="Filter">
-<div class="wrap"><table id="twins"><thead><tr>
-<th data-k="rank" class="r">Rank</th><th data-k="domain">Site</th><th data-k="label">Automatic label</th>
-<th data-k="facts_html" class="r">Facts in HTML</th><th data-k="facts_lost" class="r">Lost</th><th data-k="ua">Found by User-Agent?</th><th>First machine-only line</th>
-</tr></thead><tbody></tbody></table></div>
+<h2>4 · All Markdown twins</h2>
+<input type="text" id="filter" placeholder="Filter by site or label…" aria-label="Filter">
+<div class="wrap"><table id="tw"><thead><tr><th data-k="rank" class="r">Rank</th><th data-k="domain">Site</th><th data-k="label">Automatic label</th><th data-k="facts" class="r">Facts</th><th data-k="lost" class="r">Lost</th><th data-k="share" class="r">Share lost</th><th data-k="ua">By User-Agent?</th></tr></thead><tbody></tbody></table></div>
 
-<h2>How it works</h2>
+<h2>Method and limits</h2>
 <ul>
-<li><strong>Five identities per page, twice each, interleaved:</strong> browser; an identical control; browser + Markdown <code>Accept</code>; an AI fetcher's User-Agent; AI User-Agent + Markdown <code>Accept</code>.</li>
-<li><strong>Noise rule:</strong> content counts as machine-only only if it is in both fetches under that identity and in neither browser fetch.</li>
-<li><strong>Built-in control:</strong> the control sends exactly the browser's headers. Whatever "difference" it shows is the method's false-positive floor, measured in the same run.</li>
-<li><strong>No model in the loop:</strong> text extraction and fact extraction are plain rules, so results are reproducible on a laptop CPU.</li>
+<li><strong>Noise rule.</strong> A sentence or fact is machine-only only if it is in both fetches under that identity and in neither browser fetch. Human-only is the mirror.</li>
+<li><strong>Twin.</strong> The browser receives HTML and the other identity receives a non-HTML rendition at the same address.</li>
+<li><strong>Interval for pooled fact loss.</strong> Facts on one page are not independent, so the interval resamples sites (5,000 bootstrap draws), not facts.</li>
+<li><strong>Labels are automatic.</strong> "Addressed to AI" matches phrases such as "AI agents" and over-fires on vendors that sell agent products.</li>
+<li><strong>Raw HTML.</strong> A fact counted as lost is lost relative to raw HTML. Text that people see only after JavaScript runs is not captured on either side.</li>
+<li><strong>Not established:</strong> which deployed assistants send the Markdown <code>Accept</code> header, and how often.</li>
+<li>Sites that disallow an identity in robots.txt were skipped for it. User-Agent results are a lower bound, since IP-verifying sites show us the human page.</li>
 </ul>
-<pre>python -m twowebs witness https://time.com/
-python -m twowebs crawl --sample trigger --set trigger
-python -m twowebs analyse
-python -m twowebs triggers --sample trigger</pre>
-
-<h2>Limits</h2>
-<ul>
-<li>Automatic labels only. The "addressed to AI" label over-fires on pages that merely mention AI agents; two people still need to label the flagged cases.</li>
-<li>A lower bound on User-Agent cloaking: sites that verify AI fetchers by IP address show us the human page.</li>
-<li>Raw HTML, homepage plus one inner page, one day, one location. Country redirects are a known confound.</li>
-<li>Sites that disallow an identity in robots.txt were skipped for that identity.</li>
-<li>Which real assistants send the Markdown header is not established here.</li>
-</ul>
+<pre>pip install -e .            # Python 3.7+, one dependency (httpx), CPU only
+twowebs witness https://time.com/
+twowebs crawl --sample trigger --set trigger &amp;&amp; twowebs analyse
+python analysis/build_site_data.py   # regenerates every number on this page</pre>
 <footer id="foot"></footer>
-</main>
+</main><div class="tip" id="tip"></div>
 <script src="data.js"></script>
 <script>
-const D=window.DATA,T=D.triggers,$=s=>document.querySelector(s);
-const pct=x=>(100*x.rate).toFixed(1)+'%',ci=x=>(100*x.low).toFixed(1)+'–'+(100*x.high).toFixed(1)+'%';
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const md=T['browser-md'],ua=T['Claude-User'],ctl=T['browser-control'],both=T['Claude-User-md'];
+const D=window.DATA,T=D.triggers,$=s=>document.querySelector(s),NS='http://www.w3.org/2000/svg';
+const p1=x=>(100*x).toFixed(1)+'%',esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function el(t,a,txt){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e}
+const tip=$('#tip');function hover(n,html){n.addEventListener('mousemove',e=>{tip.innerHTML=html;tip.style.display='block';tip.style.left=Math.min(e.clientX+12,innerWidth-290)+'px';tip.style.top=(e.clientY+14)+'px'});n.addEventListener('mouseleave',()=>tip.style.display='none')}
+function wilson(k,n){if(!n)return[0,0,0];const z=1.96,p=k/n,d=1+z*z/n,c=(p+z*z/(2*n))/d,h=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/d;return[p,Math.max(0,c-h),Math.min(1,c+h)]}
+const md=T['browser-md'],ua=T['Claude-User'],ctl=T['browser-control'],both=T['Claude-User-md'],S3=D.sensitivity.find(s=>s.min_facts===3);
 $('#hero').innerHTML=[
- ['',pct(md.sites_markdown),`of sites serve a separate Markdown page when a normal browser adds one header (${md.sites_markdown.k} of ${md.sites_markdown.n}; ${ci(md.sites_markdown)})`],
- ['b',pct(ua.sites_markdown),`serve one when the request claims to be an AI fetcher by User-Agent (${ua.sites_markdown.k} of ${ua.sites_markdown.n})`],
- ['',pct(md.facts_lost_pooled),`of the numbers, prices and dates on the human page are missing from the Markdown twin (${md.facts_lost_pooled.k} of ${md.facts_lost_pooled.n})`],
- ['c',pct(ctl.sites_flagged),`false-positive floor: sites flagged when the "other" identity is the same browser (${ctl.sites_flagged.k} of ${ctl.sites_flagged.n})`]
+ ['',p1(md.sites_markdown.rate),`of sites return a separate Markdown page when a normal browser adds one <code>Accept</code> header (${md.sites_markdown.k} of ${md.sites_markdown.n})`],
+ ['b',p1(ua.sites_markdown.rate),`do so when the request claims an AI fetcher's User-Agent (${ua.sites_markdown.k} of ${ua.sites_markdown.n})`],
+ ['g',p1(S3.lose_none.rate),`of those twins keep every fact on the human page (${S3.lose_none.k} of ${S3.lose_none.n})`],
+ ['',p1(S3.lose_half.rate),`drop at least half of them (${S3.lose_half.k} of ${S3.lose_half.n})`]
 ].map(([c,b,s])=>`<div class="num ${c}"><b>${b}</b><small>${s}</small></div>`).join('');
-const rows=[['Same browser again (control)',ctl,'var(--c)'],['AI User-Agent only',ua,'var(--b)'],['Markdown Accept header only',md,'var(--a)'],['Both headers',both,'var(--a)']];
-const mx=Math.max(...rows.map(r=>r[1].sites_differ.rate));
-$('#bars').innerHTML='<div class="sans" style="font-size:13px;color:var(--mute)">Share of sites that returned a different page than the browser got · darker segment: a Markdown twin</div>'+rows.map(([n,r,c])=>
- `<div class="bar"><div>${n}</div><div class="track"><div class="fill" style="width:${100*r.sites_differ.rate/mx}%;background:${c};opacity:.45"></div><div class="fill" style="width:${100*r.sites_markdown.rate/mx}%;background:${c};position:absolute;left:0;top:0"></div><span class="v">${pct(r.sites_differ)} differ · ${pct(r.sites_markdown)} twin</span></div></div>`).join('');
-$('#venn').textContent=`Of the ${D.venn.accept_trigger} sites that served a Markdown twin on the Accept header, ${D.venn.accept_not_found_by_user_agent} were not found by changing the User-Agent alone. User-Agent spoofing found ${D.venn.user_agent_only_trigger}.`;
-$('#facts').innerHTML=[
- ['',pct(md.twins_losing_quarter),`of twins drop at least a quarter of the page's facts (${md.twins_losing_quarter.k} of ${md.twins_losing_quarter.n} twins with three or more facts)`],
- ['',pct(md.twins_losing_half),`drop at least half (${md.twins_losing_half.k} of ${md.twins_losing_half.n})`],
- ['c','0',`facts lost in the control comparison, where both sides are the same browser`]
-].map(([c,b,s])=>`<div class="num ${c}"><b>${b}</b><small>${s}</small></div>`).join('');
-$('#cases').innerHTML=Object.entries(D.cases).map(([d,c])=>`<div class="card"><h3>${esc(d)}</h3><span class="tag">${esc(c.label)}</span>
- <div class="who ai">Served to the machine only</div>${c.ai_only.slice(0,3).map(x=>`<q>${esc(x)}</q>`).join('')}
- <div class="who hu">Shown to people, missing for the machine</div>${(c.human_only||[]).slice(0,2).map(x=>`<q>${esc(x)}</q>`).join('')||'<q>—</q>'}</div>`).join('');
-let sortK='rank',dir=1;
-function draw(){const f=$('#filter').value.toLowerCase();
- const tw=D.twins.filter(t=>(t.domain+' '+t.label).toLowerCase().includes(f)).sort((a,b)=>{const x=sortK==='ua'?a.found_by_user_agent:a[sortK],y=sortK==='ua'?b.found_by_user_agent:b[sortK];return (x>y?1:x<y?-1:0)*dir});
- $('#twins tbody').innerHTML=tw.map(t=>`<tr><td class="r">${t.rank}</td><td>${esc(t.domain)}</td><td><span class="tag">${esc(t.label)}</span></td><td class="r">${t.facts_html??''}</td><td class="r">${t.facts_lost??''}</td><td>${t.found_by_user_agent?'yes':'no'}</td><td class="q">${esc((t.ai_only[0]||'').slice(0,140))}</td></tr>`).join('');}
-document.querySelectorAll('th[data-k]').forEach(th=>th.onclick=()=>{const k=th.dataset.k;dir=(k===sortK)?-dir:1;sortK=k;draw()});
-$('#filter').oninput=draw;draw();
-$('#foot').textContent=`Data: ${D.counts.sites.toLocaleString()} site entries, ${D.counts.pages.toLocaleString()} pages, ${D.counts.requests.toLocaleString()} completed requests. Generated ${D.generated}. Sites are named only for content they serve publicly on request.`;
+
+/* 1 trigger chart */
+const METRICS={sites_markdown:'serve a Markdown twin',sites_differ:'serve any different page',sites_flagged:'are flagged by a headline label'};let metric='sites_markdown';
+$('#mbtn').innerHTML=Object.entries(METRICS).map(([k,v])=>`<button class="seg" data-m="${k}" aria-pressed="${k===metric}">${v}</button>`).join(' ');
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{metric=b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.setAttribute('aria-pressed',x===b));drawTrig()});
+function drawTrig(){const s=$('#trig');s.innerHTML='';const rows=[['Same browser again (control)',ctl,'--c'],['AI User-Agent only',ua,'--b'],['Markdown Accept header only',md,'--a'],['Both headers',both,'--a']];
+ const mx=Math.max(.02,...rows.map(r=>r[1][metric].high))*1.12,x0=215,w=640;
+ for(let i=0;i<=4;i++){const v=mx*i/4,x=x0+w*i/4;s.append(el('line',{x1:x,x2:x,y1:14,y2:214,stroke:css('--line')}),el('text',{x,y:236,'text-anchor':'middle'},p1(v)))}
+ rows.forEach(([n,r,c],i)=>{const m=r[metric],y=30+i*48;s.append(el('text',{x:x0-10,y:y+17,'text-anchor':'end',class:'lab'},n));
+  const bar=el('rect',{x:x0,y,width:Math.max(1,w*m.rate/mx),height:26,rx:4,fill:css(c)});s.append(bar);
+  s.append(el('line',{x1:x0+w*m.low/mx,x2:x0+w*m.high/mx,y1:y+13,y2:y+13,stroke:css('--ink'),'stroke-width':1.5}),el('line',{x1:x0+w*m.low/mx,x2:x0+w*m.low/mx,y1:y+8,y2:y+18,stroke:css('--ink')}),el('line',{x1:x0+w*m.high/mx,x2:x0+w*m.high/mx,y1:y+8,y2:y+18,stroke:css('--ink')}));
+  s.append(el('text',{x:x0+w*m.high/mx+8,y:y+17,class:'lab'},`${p1(m.rate)}  (${m.k}/${m.n})`));
+  hover(bar,`<b>${n}</b><br>${m.k} of ${m.n} comparable sites<br>${p1(m.rate)} (95% CI ${p1(m.low)}–${p1(m.high)})`)})}
+drawTrig();
+$('#venn').textContent=`Of the ${D.venn.accept} sites that served a twin on the Accept header, ${D.venn.accept_missed_by_user_agent} were not twins under the AI User-Agent. Every earlier tool we found tests only the User-Agent.`;
+
+/* 2 fact strip + detail */
+const TW=D.twins.map(t=>Object.assign({share:t.facts?t.lost/t.facts:0,ua:t.found_by_user_agent},t));let sel=null;
+function drawStrip(){const mf=+$('#mf').value;$('#mfv').textContent=mf;const s=$('#strip');s.innerHTML='';
+ let ts=TW.filter(t=>t.facts>=mf);const k=$('#srt').value;ts.sort((a,b)=>k==='rank'?a.rank-b.rank:k==='facts'?b.facts-a.facts:b.share-a.share||b.facts-a.facts);
+ const x0=40,w=850,h=180,bw=Math.max(3,w/Math.max(ts.length,1)-2);
+ [0,.25,.5,.75,1].forEach(v=>{const y=14+h*(1-v);s.append(el('line',{x1:x0,x2:x0+w,y1:y,y2:y,stroke:css('--line')}),el('text',{x:x0-6,y:y+4,'text-anchor':'end'},(v*100)+'%'))});
+ ts.forEach((t,i)=>{const x=x0+i*(w/ts.length),bh=Math.max(2,h*t.share);const r=el('rect',{x,y:14+h-bh,width:bw,height:bh,rx:2,fill:t.share===0?css('--g'):css('--a'),opacity:sel&&sel.domain===t.domain?1:.78,stroke:sel&&sel.domain===t.domain?css('--ink'):'none','stroke-width':2,style:'cursor:pointer'});
+  hover(r,`<b>${esc(t.domain)}</b> · rank ${t.rank}<br>${t.lost} of ${t.facts} facts absent from the twin (${p1(t.share)})`);r.onclick=()=>{pick(t)};s.append(r)});
+ s.append(el('text',{x:x0,y:222},'each bar = one site · green = nothing lost · share of the human page\'s facts absent from the Markdown twin'));
+ const n=ts.reduce((a,t)=>a+t.facts,0),l=ts.reduce((a,t)=>a+t.lost,0),half=ts.filter(t=>t.share>=.5).length,none=ts.filter(t=>t.lost===0).length;
+ const sh=ts.map(t=>t.share).sort((a,b)=>a-b),med=sh.length?sh[Math.floor((sh.length-1)/2)]:0,[hp,hl,hh]=wilson(half,ts.length),[np]=wilson(none,ts.length);
+ const sens=D.sensitivity.find(z=>z.min_facts===mf);
+ $('#live').innerHTML=[['c',ts.length,'twins at this threshold'],['g',p1(np),`lose nothing (${none})`],['',p1(hp),`lose at least half (${half}; 95% CI ${p1(hl)}–${p1(hh)})`],['',n?p1(l/n):'–',`of all facts absent, pooled (${l} of ${n})`+(sens?`; site-resampled 95% CI ${p1(sens.boot_low)}–${p1(sens.boot_high)}`:'')],['c',p1(med),'median site']].map(([c,b,x])=>`<div class="num ${c}"><b>${b}</b><small>${x}</small></div>`).join('')}
+function pick(t){sel=t;drawStrip();drawTable();const chips=(a,c)=>a.length?`<div class="chips ${c}">${a.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:'<span class="q">none</span>';
+ $('#detail').innerHTML=`<h3>${esc(t.domain)} <span class="tag">rank ${t.rank}</span> <span class="tag">${esc(t.page)} page</span> <span class="tag">${esc(t.label)}</span></h3>
+ <div class="ui" style="font-size:13.5px;color:var(--mute)">Human page ${(t.html_bytes/1000).toFixed(0)} kB of HTML · twin ${(t.md_bytes/1000).toFixed(1)} kB of Markdown · ${t.lost} of ${t.facts} facts absent · found by User-Agent alone: ${t.ua?'yes':'no'}</div>
+ <div class="two"><div><div class="who hu">Facts on the human page, absent from the twin</div>${chips(t.lost_examples,'lost')}<div class="who hu">Kept</div>${chips(t.kept_examples,'')}
+ <div class="who hu">Sentences only people get (${t.n_human_only})</div>${t.human_only.map(x=>`<span class="q">${esc(x)}</span>`).join('')||'<span class="q">none</span>'}</div>
+ <div><div class="who ai">Sentences only the machine gets (${t.n_machine_only})</div>${t.machine_only.map(x=>`<span class="q">${esc(x)}</span>`).join('')||'<span class="q">none</span>'}</div></div>`}
+$('#mf').oninput=drawStrip;$('#srt').onchange=drawStrip;
+
+/* 3 small charts */
+function hbar(id,items,color){const s=$(id);s.innerHTML='';const mx=Math.max(...items.map(i=>i.high))*1.15,x0=92,w=250;items.forEach((m,i)=>{const y=14+i*42;
+ s.append(el('text',{x:x0-8,y:y+17,'text-anchor':'end',class:'lab'},m.name));const b=el('rect',{x:x0,y,width:Math.max(1,w*m.rate/mx),height:24,rx:4,fill:css(color)});s.append(b);
+ s.append(el('line',{x1:x0+w*m.low/mx,x2:x0+w*m.high/mx,y1:y+12,y2:y+12,stroke:css('--ink'),'stroke-width':1.5}),el('text',{x:x0+w*m.high/mx+6,y:y+17,class:'lab'},`${p1(m.rate)} (${m.k}/${m.n})`));
+ hover(b,`<b>${m.name}</b><br>${m.k} of ${m.n}<br>95% CI ${p1(m.low)}–${p1(m.high)} (binomial)`)})}
+hbar('#types',D.by_type.map(t=>Object.assign({name:t.type},t)),'--a');hbar('#ranks',D.rank_buckets.map(t=>Object.assign({name:'rank '+t.label},t)),'--b');
+$('#ctlnote').textContent=`Control: across ${D.control.pages.toLocaleString()} pages compared with a second copy of the same browser request, ${D.control.facts_lost} of ${D.control.facts.toLocaleString()} facts (${p1(D.control.facts_lost/D.control.facts)}) counted as lost and ${D.control.pages_flagged} pages were flagged. That is the floor under every number here. By-type intervals treat facts as independent and are therefore too narrow.`;
+
+/* 4 table */
+let sk='share',dir=-1;function drawTable(){const f=$('#filter').value.toLowerCase();const ts=TW.filter(t=>(t.domain+' '+t.label).toLowerCase().includes(f)).sort((a,b)=>(a[sk]>b[sk]?1:a[sk]<b[sk]?-1:0)*dir);
+ $('#tw tbody').innerHTML=ts.map(t=>`<tr data-d="${esc(t.domain)}" class="${sel&&sel.domain===t.domain?'sel':''}"><td class="r">${t.rank}</td><td>${esc(t.domain)}</td><td><span class="tag">${esc(t.label)}</span></td><td class="r">${t.facts}</td><td class="r">${t.lost}</td><td class="r">${t.facts?p1(t.share):'–'}</td><td>${t.ua?'yes':'no'}</td></tr>`).join('');
+ document.querySelectorAll('#tw tbody tr').forEach(r=>r.onclick=()=>{pick(TW.find(t=>t.domain===r.dataset.d));$('#detail').scrollIntoView({behavior:'smooth',block:'nearest'})})}
+document.querySelectorAll('#tw th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;dir=k===sk?-dir:1;sk=k;drawTable()});$('#filter').oninput=drawTable;
+pick(TW.find(t=>t.domain==='railway.app')||TW.slice().sort((a,b)=>b.share-a.share)[0]);
+$('#foot').textContent=`${D.counts.sites.toLocaleString()} sites loaded, ${D.counts.pages.toLocaleString()} pages, ${D.counts.requests.toLocaleString()} completed requests. ${D.twins_unlisted} twin site with adult content is counted but not listed. Sites are named only for content they serve publicly to any client that asks; no claim about intent is made. Generated ${D.generated}.`;
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{drawTrig();drawStrip()});
 </script>
 </body></html>

@@ -149,7 +149,13 @@ def facts(text):
     out = set()
     for kind, pat in _FACT_PATTERNS:
         for m in pat.findall(text):
-            out.add(kind + ":" + re.sub(r"[\s,]+", "", m.lower()))
+            v = re.sub(r"[\s,]+", "", m.lower())
+            # Not facts: runs of zeros (colour codes, padding) and long bare
+            # digit strings (identifiers, timestamps, phone numbers).
+            if kind == "number" and (not v.strip("0.") or
+                                     (v.isdigit() and len(v) > 7 and "," not in m)):
+                continue
+            out.add(kind + ":" + v)
     for m in _ENTITY.findall(text):
         out.add("entity:" + re.sub(r"\s+", " ", m.lower()))
     return out

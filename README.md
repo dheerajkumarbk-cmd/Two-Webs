@@ -116,6 +116,26 @@ python -m twowebs export-labels data/labels_A.csv
 - Image alt text is kept from Markdown but not from HTML, which can create a spurious AI-only sentence.
 - Kappa is computed over all samples together.
 
+## Trigger crawl and reproducing the report
+
+The headline result comes from the trigger crawl, which fetches each page as: browser, an identical control, browser + `Accept: text/markdown`, an AI User-Agent, and both.
+
+```
+pip install .                                   # or run as: python -m twowebs ...
+twowebs load-sample --name trigger --file config/samples/trigger.txt
+twowebs crawl --sample trigger --set trigger
+twowebs analyse
+twowebs triggers --sample trigger               # site-level summary per identity
+python analysis/build_site_data.py              # robustness analyses -> docs/data.json
+python analysis/make_numbers.py                 # report/numbers.tex (every number in the report)
+python analysis/make_figures.py                 # report/fig*.pdf
+tectonic report/main.tex                        # report/main.pdf
+```
+
+`docs/` is a static site (open `docs/index.html` through any web server, or GitHub Pages) that draws every chart from `docs/data.js` and lets a reader inspect each site's lost facts and machine-only text.
+
+`twowebs witness <url>` checks a single live URL under all identities.
+
 ## Tests
 
 `tests/` uses `unittest` with synthetic HTML and Markdown fixtures. No network. Run with `python -m unittest discover -s tests`.
